@@ -1,0 +1,21 @@
+########################
+ssa_galfit_prep.py
+########################
+DATE: 9-9-16
+Description: Used for getting the ssa galaxies ready for galfitting.
+Will contain recipes for extracting the galaxy from the relevant fits
+file as a postage stamp, which contains the relevant header info for galfit,
+and for rotating the file so that North is up to match the KMOS observations,
+after this the rotated postage stamp will be saved with a different name.
+Then for running sextractor on the object, not sure exactly how this will
+work in an automated way given that there will definitely be some masking of
+background contaminants required, and possibly a script for creating the
+galfit input and running galfit. 
+
+########################
+seg_map_mask.py
+########################
+DATE: 9-9-16
+Takes the segmentation map produced by sextractor, keeps the zeros the same
+and sets everything to 1 that is not equal to the number of the object you are
+attempting to fit

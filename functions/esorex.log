@@ -1,0 +1,9 @@
+
+Start time     : 2016-09-13T10:49:07
+Program name   : esorex
+Severity level : [ INFO  ] 
+
+10:49:07 [ INFO  ] : [tid=000] This is EsoRex, version 3.12.3
+10:49:07 [ INFO  ] : [tid=000] using the libraries: CPL = 7.0, CFITSIO = 3.36, WCSLIB = 4.24, FFTW (normal precision) = 3.3.4-sse2, FFTW (single precision) = 3.3.4-sse2, OPENMP = 201307
+10:49:07 [ INFO  ] : [tid=000] Invocation command line was: esorex -h kmos_std_star
+10:49:08 [WARNING] : [tid=000] Unable to open directory 

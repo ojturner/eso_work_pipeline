@@ -82,5 +82,5 @@ def create_galfit_mask(obj_number,
 
     seg_hdu.writeto(new_seg_name, clobber=True)
 
-create_galfit_mask(1, '/home/oturner/disk1/turner/DATA/Sextractor/SSA_F160W/m38_seg.fits')
+create_galfit_mask(1, '/scratch2/oturner/disk1/turner/DATA/Sextractor/SSA_F160W/m38_seg.fits')
 

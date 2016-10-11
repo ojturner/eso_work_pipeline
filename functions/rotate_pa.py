@@ -31,8 +31,6 @@ from photutils import aperture_photometry
 sys.path.append('/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
-from vel_field_class import vel_field
-
 # Need a function to do the extraction along the KA
 
 def extract(d_aper,
@@ -210,7 +208,7 @@ def extract(d_aper,
 
     real_phot_table = aperture_photometry(v_field, apertures)
 
-    real_velocity_values = real_phot_table['aperture_sum'] / pixel_area
+    real_velocity_values = real_phot_table['aperture_sum'].data / pixel_area
 
 #    fig, ax = plt.subplots(1, 1, figsize=(12, 6))
 #    ax.scatter(x,
@@ -242,26 +240,35 @@ def find_first_valid_entry(velocity_array):
     Takes the output from extract and returns the index of the first
     and last values which are not np.nan
     """
-    i = 0
 
-    while np.isnan(velocity_array[i]):
+    # need at least one valid entry for this to work
 
-        i += 1
+    if np.isfinite(velocity_array).any():
 
-    start_index = copy(i)
+        i = 0
 
-    # need to have a try here just incase the velocity array
-    # reaches the last entry in the array
+        while np.isnan(velocity_array[i]):
 
-    j = 0
+            i += 1
 
-    while np.isnan(velocity_array[::-1][j]):
+        start_index = copy(i)
 
-        j += 1
+        # need to have a try here just incase the velocity array
+        # reaches the last entry in the array
 
-    end_index = len(velocity_array) - 1 - j
+        j = 0
 
-    return [start_index, end_index]
+        while np.isnan(velocity_array[::-1][j]):
+
+            j += 1
+
+        end_index = len(velocity_array) - 1 - j
+
+        return [start_index, end_index]
+
+    else:
+
+        return [0, 0]
 
 # First have a simple function which measures the PA classifier
 

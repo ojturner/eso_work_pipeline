@@ -39,6 +39,12 @@ def flatfield(cube,
     # read in the object 
     cube_table = fits.open(cube)
 
+    print 'THIS IS THE CUBE NAME: %s' % cube
+
+    # get the filter ID from the primary header
+    prim_header = cube_table[0].header
+    filt = prim_header['HIERARCH ESO INS FILT1 ID']
+
     data = cube_table[1].data
 
     data_header = cube_table[1].header
@@ -103,48 +109,34 @@ def flatfield(cube,
 
             f_data[i, :, y] = f_data[i, :, y] - np.nanmedian(masked_data[i, :, y])
 
-    o_nband = np.nanmedian(f_data[o_peak-5:o_peak+5, :, :], axis=0)
+    # conditional execution depending on waveband
 
-#    fig, ax = plt.subplots(1, 3, figsize=(12, 5))
-#    im = ax[0].imshow(np.nanmedian(data[100:1350, :, :], axis=0),
-#                   cmap=plt.get_cmap('hot'),
-#                   interpolation='nearest',
-#                   vmin=-0.0,
-#                   vmax=0.4)
-#    # add colourbar to each plot
-#    divider = make_axes_locatable(ax[0])
-#    cax_new = divider.append_axes('right', size='10%', pad=0.05)
-#    plt.colorbar(im, cax=cax_new)
-#    im = ax[1].imshow(np.nanmedian(f_data[100:1350, :, :], axis=0),
-#                   cmap=plt.get_cmap('hot'),
-#                   interpolation='nearest',
-#                   vmin=-0.3,
-#                   vmax=-0.098918)
-#    # add colourbar to each plot
-#    divider = make_axes_locatable(ax[1])
-#    cax_new = divider.append_axes('right', size='10%', pad=0.05)
-#    plt.colorbar(im, cax=cax_new)
-#    im = ax[2].imshow(o_nband,
-#                   cmap=plt.get_cmap('hot'),
-#                   interpolation='nearest',
-#                   vmin=-0.3,
-#                   vmax=3)
-#    # add colourbar to each plot
-#    divider = make_axes_locatable(ax[2])
-#    cax_new = divider.append_axes('right', size='10%', pad=0.05)
-#    plt.colorbar(im, cax=cax_new)
-#    # set the title
-#    ax[0].set_title('Cont_1')
-#    ax[1].set_title('Cont_2')
-#    ax[2].set_title('OIII')
-#    fig.tight_layout()
-#    plt.suptitle('%s' % gal_name, fontsize=25)
-#    #plt.show()
-#    fig.savefig('%s_flatfield.png' % cube[:-5])
-#    plt.close('all')
+    if filt == 'K':
 
-    return {'cont1' : np.nanmedian(data[100:1350, :, :], axis=0),
-            'cont2' : np.nanmedian(f_data[100:1350, :, :], axis=0),
+        o_nband = np.nanmedian(f_data[o_peak-5:o_peak+5, :, :], axis=0)
+
+        cont_1 = np.nanmedian(data[100:1350, :, :], axis=0)
+
+        cont_2 = np.nanmedian(f_data[100:1350, :, :], axis=0)
+
+    elif filt == 'HK':
+
+        o_nband = np.nanmedian(f_data[o_peak-3:o_peak+3, :, :], axis=0)
+
+        cont_1 = np.nanmedian(data[100:1750, :, :], axis=0)
+
+        cont_2 = np.nanmedian(f_data[100:1750, :, :], axis=0)
+
+    else:
+
+        o_nband = np.nanmedian(f_data[o_peak-5:o_peak+5, :, :], axis=0)
+
+        cont_1 = np.nanmedian(data[100:1350, :, :], axis=0)
+
+        cont_2 = np.nanmedian(f_data[100:1350, :, :], axis=0)
+
+    return {'cont1' : cont_1,
+            'cont2' : cont_2,
             'OIII' : o_nband}
 
 #c = '/Users/owenturner/DATA/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_bs008543.fits'

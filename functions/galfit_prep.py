@@ -32,11 +32,11 @@ from photutils import EllipticalAperture
 from photutils import aperture_photometry
 
 # add the class file to the PYTHONPATH
-sys.path.append('/disk1/turner/PhD'
+sys.path.append('/scratch2/oturner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/disk1/turner/PhD'
+sys.path.append('/scratch2/oturner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import cube_background_subtract as b_s
@@ -111,8 +111,8 @@ def galfit_input(infile,
     n_hdu.writeto(n_name,
                   clobber=True)
 
-master = ascii.read('/disk1/turner/DATA/all_names_new.txt')
-names = ascii.read('/disk1/turner/Catalogues/goods_s/just_names.txt')
+master = ascii.read('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt')
+names = ascii.read('/scratch2/oturner/disk1/turner/Catalogues/goods_s/just_names.txt')
 
 for f, r, n in zip(master['Filename'], master['redshift'], names['name']):
 
@@ -121,4 +121,4 @@ for f, r, n in zip(master['Filename'], master['redshift'], names['name']):
     galfit_input(f,
                  r,
                  n,
-                 '/disk1/turner/DATA/Victoria_galfit/n_band_outputs_flatfield/')
+                 '/scratch2/oturner/disk1/turner/DATA/Victoria_galfit/n_band_outputs_flatfield/')

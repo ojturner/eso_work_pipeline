@@ -39,6 +39,63 @@ class cubeOps(object):
 
         self.fileName = fileName
 
+        # Variable containing all the fits extensions
+        self.Table = fits.open(fileName)
+
+        # Variable housing the primary data cube
+        self.data = self.Table[1].data
+
+        # Primary Header
+        self.primHeader = self.Table[0].header
+
+        # set what the combined name extension is going to be. 
+        # All information is in the header - can be set of permutations
+        # for what this is.
+
+        header_string = str(self.primHeader)
+
+        illum_var = header_string.find('ILLUM_CORR')
+
+        skytweak_var = header_string.find('sky_tweak')
+
+        telluric_var = header_string.find('TELLURIC')
+
+        if illum_var == -1 and skytweak_var == -1 and telluric_var == -1:
+
+            comb_ext = '.fits'
+
+        elif illum_var != -1 and skytweak_var != -1 and telluric_var != -1:
+
+            comb_ext = '__telluric_illum_skytweak.fits'
+
+        elif illum_var != -1 and skytweak_var != -1 and telluric_var == -1:
+
+            comb_ext = '__illum_skytweak.fits'
+
+        elif illum_var != -1 and skytweak_var == -1 and telluric_var == -1:
+
+            comb_ext = '__illum.fits'
+
+        elif illum_var == -1 and skytweak_var != -1 and telluric_var == -1:
+
+            comb_ext = '__skytweak.fits'
+
+        elif illum_var == -1 and skytweak_var == -1 and telluric_var != -1:
+
+            comb_ext = '__telluric.fits'
+
+        elif illum_var != -1 and skytweak_var != -1 and telluric_var != -1:
+
+            comb_ext = '__telluric_illum.fits'
+
+        elif illum_var == -1 and skytweak_var != -1 and telluric_var != -1:
+
+            comb_ext = '__telluric_skytweak.fits'
+
+        else:
+
+            comb_ext = '.fits'
+
         # define the galaxy name from the full file path
 
         if fileName.find("/") == -1:
@@ -54,12 +111,6 @@ class cubeOps(object):
 
         self.gal_name = str(self.gal_name)
 
-        # Variable containing all the fits extensions
-        self.Table = fits.open(fileName)
-
-        # Variable housing the primary data cube
-        self.data = self.Table[1].data
-
         # Collapse over the wavelength axis to get an image
         self.imData = np.nanmedian(self.data, axis=0)
 
@@ -73,12 +124,6 @@ class cubeOps(object):
         except:
 
             print 'Cannot extract the total spectrum'
-
-        # Create a plot of the image
-        # Variable housing the noise data cube
-        # self.noise = self.Table[2].data
-        # Primary Header
-        self.primHeader = self.Table[0].header
 
         # data Header
         self.dataHeader = self.Table[1].header
@@ -214,20 +259,9 @@ class cubeOps(object):
         # This is now in order of the IFU
         self.combNames = []
 
-        # depending on the type of object a cube is being made for
-        # the combinedName is different - e.g. if skytweak is specified
-        # or if telluric is specified or illumination correction is spec.
-        # the name always comes after the '__' so can search the galaxy
-        # name for that - if double underscore doesn't exist then just
-        # make the name '.fits'
+        # Have to hardwire what the fits extension is for now - may come
+        # up with a cleverer way of doing this in the future.
 
-        if self.gal_name.find('__') == -1:
-
-            comb_ext = '.fits'
-
-        else:
-
-            comb_ext = self.gal_name[self.gal_name.find('__'):]
 
         for entry in self.combDict.keys():
 
@@ -986,6 +1020,15 @@ class cubeOps(object):
 
         # range from which to get the image data now defined
         star_data = np.nanmedian(self.data[lower:upper], axis=0)
+
+        # this doesn't work so smoothly for the tiny numbers. 
+        # if the median star_data value is < 10-10, divide through 
+        # by 1E-18
+
+        if np.nanmedian(star_data) < 1E-10:
+
+            star_data = star_data / 1E-18
+
 
         # mask out the nan values using np.ma
         data_masked = np.ma.masked_invalid(star_data)

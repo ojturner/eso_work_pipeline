@@ -25,6 +25,14 @@ from matplotlib.ticker import MaxNLocator
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy import poly1d
 from sys import stdout
+from matplotlib import rc
+
+
+# add the functions folder to the PYTHONPATH
+sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+                + '/KMOS/Analysis_Pipeline/Python_code/functions')
+
+import rotate_pa as rt_pa
 
 # Create a gaussian function for use with lmfit
 def gaussian(x1,
@@ -163,18 +171,18 @@ def sersic_grid(dim_x,
                                             dim_y * sersic_factor))
 
 
-#    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
-#    im = ax.imshow(bin_by_factor(s_mod_eval,sersic_factor),
-#                   cmap=plt.get_cmap('jet'),
-#                   interpolation='nearest')
-#    # add colourbar to each plot
-#    divider = make_axes_locatable(ax)
-#    cax_new = divider.append_axes('right', size='10%', pad=0.05)
-#    plt.colorbar(im, cax=cax_new)
-#    # set the title
-#    ax.set_title('Sersic model')
-#    plt.show()
-#    plt.close('all')
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+    im = ax.imshow(bin_by_factor(s_mod_eval,sersic_factor),
+                   cmap=plt.get_cmap('jet'),
+                   interpolation='nearest')
+    # add colourbar to each plot
+    divider = make_axes_locatable(ax)
+    cax_new = divider.append_axes('right', size='10%', pad=0.05)
+    plt.colorbar(im, cax=cax_new)
+    # set the title
+    ax.set_title('Sersic model')
+    plt.show()
+    plt.close('all')
     
     return bin_by_factor(s_mod_eval,sersic_factor)
 
@@ -250,7 +258,7 @@ def psf_grid(dim_x,
     
     n_hdu = fits.PrimaryHDU(g_mod_eval)
 
-    n_hdu.writeto('/home/oturner/disk1/turner/DATA/Victoria_galfit/n_band_outputs_flatfield/psf_0.2.fits',
+    n_hdu.writeto('/scratch2/oturner/disk1/turner/DATA/Victoria_galfit/n_band_outputs_flatfield/psf_0.2.fits',
                   clobber=True)
 
     if float(psf_factor) != 1.0:
@@ -416,6 +424,7 @@ def cube_blur(vel_data,
               pix_scale,
               psf_factor,
               sersic_factor,
+              pa,
               sigma=60,
               sersic_n=2.0):
 
@@ -423,7 +432,11 @@ def cube_blur(vel_data,
     Def: constructs a 3D cube from a 2D velocity field and passes
     that through the atmosphere.
     """
-
+    # redshift 3-4 distribution plot
+    rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+    ## for Palatino and other serif fonts use:
+    #rc('font',**{'family':'serif','serif':['Palatino']})
+    rc('text', usetex=True)
     # define speed of light and central wavelength
 
     central_l = (1 + redshift) * 0.500824
@@ -510,7 +523,7 @@ def cube_blur(vel_data,
 
     shifted_velocities = np.empty(shape=(dim_x, dim_y))
 
-    #shifted_sigma = np.empty(shape=(dim_x, dim_y))
+    shifted_sigma = np.empty(shape=(dim_x, dim_y))
 
     # fit a gaussian to every profile in the gauss_array_cube
     # and store in the smear_array
@@ -523,13 +536,17 @@ def cube_blur(vel_data,
                                           cube_blurred[:, g, h])
 
             shifted_velocities[g, h] = gauss_values['center']
-            #shifted_sigma[g, h] = gauss_values['sigma']
+            shifted_sigma[g, h] = gauss_values['sigma']
 
     # convert back to a kilometres per second value
 
     shifted_velocities = ((shifted_velocities - central_l) / central_l) * c
-    #shifted_sigma = (((shifted_sigma) / central_l) * c) - 60
-
+    shifted_sigma = (((shifted_sigma) / central_l) * c) - sigma
+    # just doing some tests now. 
+    # for 8543 - can we actually reproduce the observed velocity field with
+    # the beam smearing? Load that in and check.
+#    vel_field_8543 = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_bs008543_vel_field.fits')[0].data
+#    data_vels, data_x = rt_pa.extract(0.4, 0.6, 4.86785782637, vel_field_8543, xcen, ycen, pix_scale)
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(vel_data,
 #                   cmap=plt.get_cmap('jet'),
@@ -539,30 +556,138 @@ def cube_blur(vel_data,
 #    cax_new = divider.append_axes('right', size='10%', pad=0.05)
 #    plt.colorbar(im, cax=cax_new)
 #    # set the title
-#    ax.set_title('Model Velocities')
+#    ax.set_title('Model Velocities No smearing')
 #    plt.show()
-#    fig.savefig('/disk1/turner/DATA/experiments/non_smeared_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/non_smeared_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
 #                                                                                                             sersic_factor))
 #    plt.close('all')
-    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
-    im = ax.imshow(shifted_velocities,
-                   cmap=plt.get_cmap('jet'),
-                   interpolation='nearest')
-    # add colourbar to each plot
-    divider = make_axes_locatable(ax)
-    cax_new = divider.append_axes('right', size='10%', pad=0.05)
-    plt.colorbar(im, cax=cax_new)
-    # set the title
-    ax.set_title('Shifted Velocities')
-    plt.show()
-    fig.savefig('/disk1/turner/DATA/experiments/smeared_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
-                                                                                                             sersic_n,
-                                                                                                             seeing,
-                                                                                                             psf_factor,
-                                                                                                             sersic_factor))
+#    # also plot the extracted rotation curve values
+#    unsmeared_vels, unsmeared_x = rt_pa.extract(0.4, 0.6, pa, vel_data, xcen, ycen, pix_scale)
+#    fig, ax = plt.subplots(1, 1, figsize=(8,8))
+#    ax.set_ylabel(r'V$_{c}$[kms$^{-1}$]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    ax.set_xlabel(r'r [arcsec]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    # tick parameters 
+#    ax.tick_params(axis='both',
+#                       which='major',
+#                       labelsize=18,
+#                       length=10,
+#                       width=2)
+#    ax.tick_params(axis='both',
+#                       which='minor',
+#                       labelsize=18,
+#                       length=5,
+#                       width=1)
+#    ax.scatter(unsmeared_x, unsmeared_vels, marker='o', s=75, color='red')
+#    ax.plot(unsmeared_x, unsmeared_vels)
+#    ax.scatter(data_x, data_vels, marker='+', s=75, color='black')
+#    ax.plot(data_x, data_vels)
+#    ax.set_title('Intrinsic Velocity')
+#    fig.tight_layout()
+#    ax.minorticks_on()
+#    plt.show()
+#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/unsmeared_1d_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#                                                                                                             sersic_n,
+#                                                                                                             seeing,
+#                                                                                                             psf_factor,
+#                                                                                                             sersic_factor))
+#    plt.close('all')
+#    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+#    im = ax.imshow(shifted_velocities,
+#                   cmap=plt.get_cmap('jet'),
+#                   interpolation='nearest')
+#    # add colourbar to each plot
+#    divider = make_axes_locatable(ax)
+#    cax_new = divider.append_axes('right', size='10%', pad=0.05)
+#    plt.colorbar(im, cax=cax_new)
+#    # set the title
+#    ax.set_title('Shifted Velocities')
+#    plt.show()
+#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#                                                                                                             sersic_n,
+#                                                                                                             seeing,
+#                                                                                                             psf_factor,
+#                                                                                                             sersic_factor))
+#    plt.close('all')
+#    # also plot the extracted rotation curve values
+#    smeared_vels, smeared_x = rt_pa.extract(0.4, 0.6, pa, shifted_velocities, xcen, ycen, pix_scale)
+#    fig, ax = plt.subplots(1, 1, figsize=(8,8))
+#    ax.set_ylabel(r'V$_{c}$[kms$^{-1}$]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    ax.set_xlabel(r'r [arcsec]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    # tick parameters 
+#    ax.tick_params(axis='both',
+#                       which='major',
+#                       labelsize=18,
+#                       length=10,
+#                       width=2)
+#    ax.tick_params(axis='both',
+#                       which='minor',
+#                       labelsize=18,
+#                       length=5,
+#                       width=1)
+#    ax.scatter(smeared_x, smeared_vels, marker='o', s=75, color='red')
+#    ax.plot(smeared_x, smeared_vels)
+#    ax.scatter(data_x, data_vels, marker='+', s=75, color='black')
+#    ax.plot(data_x, data_vels)
+#    ax.set_title('Smeared Velocity')
+#    fig.tight_layout()
+#    ax.minorticks_on()
+#    plt.show()
+#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_1d_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#                                                                                                             sersic_n,
+#                                                                                                             seeing,
+#                                                                                                             psf_factor,
+#                                                                                                             sersic_factor))
+#    plt.close('all')
+#    fig, ax = plt.subplots(1, 1, figsize=(8,8))
+#    ax.set_ylabel(r'V$_{c}$[kms$^{-1}$]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    ax.set_xlabel(r'r [arcsec]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    # tick parameters 
+#    ax.tick_params(axis='both',
+#                       which='major',
+#                       labelsize=18,
+#                       length=10,
+#                       width=2)
+#    ax.tick_params(axis='both',
+#                       which='minor',
+#                       labelsize=18,
+#                       length=5,
+#                       width=1)
+#    ax.scatter(unsmeared_x, unsmeared_vels, marker='o', s=75, color='red')
+#    ax.plot(unsmeared_x, unsmeared_vels)
+#    ax.scatter(smeared_x, smeared_vels, marker='o', s=75, color='olive')
+#    ax.plot(smeared_x, smeared_vels, color='orange')
+#    ax.scatter(data_x, data_vels, marker='+', s=75, color='black')
+#    ax.plot(data_x, data_vels)
+#    ax.set_title('Intrinsic and Smeared Comparison')
+#    fig.tight_layout()
+#    ax.minorticks_on()
+#    plt.show()
+#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/1d_smearing_comparison%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#                                                                                                             sersic_n,
+#                                                                                                             seeing,
+#                                                                                                             psf_factor,
+#                                                                                                             sersic_factor))
 #    plt.close('all')
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(shifted_sigma,
@@ -575,7 +700,40 @@ def cube_blur(vel_data,
 #    # set the title
 #    ax.set_title('Shifted Dispersions')
 #    plt.show()
-#    fig.savefig('/disk1/turner/DATA/experiments/smeared_dispersions_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_dispersions_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#                                                                                                             sersic_n,
+#                                                                                                             seeing,
+#                                                                                                             psf_factor,
+#                                                                                                             sersic_factor))
+#    plt.close('all')
+#    # also plot the extracted rotation curve values
+#    unsmeared_vels, unsmeared_x = rt_pa.extract(0.4, 0.6, pa, shifted_sigma, xcen, ycen, pix_scale)
+#    fig, ax = plt.subplots(1, 1, figsize=(8,8))
+#    ax.set_ylabel(r'V$_{c}$[kms$^{-1}$]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    ax.set_xlabel(r'r [arcsec]',
+#                      fontsize=24,
+#                      fontweight='bold',
+#                      labelpad=30)
+#    # tick parameters 
+#    ax.tick_params(axis='both',
+#                       which='major',
+#                       labelsize=18,
+#                       length=10,
+#                       width=2)
+#    ax.tick_params(axis='both',
+#                       which='minor',
+#                       labelsize=18,
+#                       length=5,
+#                       width=1)
+#    ax.scatter(unsmeared_x, unsmeared_vels, marker='o', s=75, color='red')
+#    ax.plot(unsmeared_x, unsmeared_vels)
+#    fig.tight_layout()
+#    ax.minorticks_on()
+#    plt.show()
+#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_1d_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,

@@ -37,7 +37,7 @@ import emcee
 import corner
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/disk1/turner/PhD'
+sys.path.append('/scratch2/oturner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import psf_blurring as psf
@@ -734,6 +734,8 @@ class vel_field(object):
 
         # computationally expensive
 
+        pa = theta[3]
+
         if smear:
 
             vel_2d = psf.cube_blur(vel_2d,
@@ -745,6 +747,7 @@ class vel_field(object):
                                    pix_scale,
                                    psf_factor,
                                    sersic_factor,
+                                   pa,
                                    sigma,
                                    sersic_n)
 
@@ -3847,7 +3850,13 @@ class vel_field(object):
             vel_2d = psf.bin_by_factor(vel_2d,
                                        m_factor)
 
+        print 'computed'
+
+        pa = theta[0]
+
         if smear:
+
+            print 'smearing'
 
             vel_2d = psf.cube_blur(vel_2d,
                                    redshift,
@@ -3858,6 +3867,7 @@ class vel_field(object):
                                    pix_scale,
                                    psf_factor,
                                    sersic_factor,
+                                   pa,
                                    sigma,
                                    sersic_n)
 
@@ -3935,7 +3945,7 @@ class vel_field(object):
         pa, rt, vasym = theta
 
         if 0 < pa < 2 * np.pi and \
-           1.0 < rt < 5.0 and \
+           0.5 < rt < 7.5 and \
            0 < vasym < 350:
 
             return 0.0
@@ -3997,6 +4007,11 @@ class vel_field(object):
                                   sersic_factor,
                                   m_factor,
                                   smear=False):
+
+        """
+        Def:
+        Need to add a description to this
+        """
 
         ndim = len(theta)
 

@@ -43,13 +43,13 @@ def extract_stamp(galaxy_name,
                   ra,
                   dec,
                   region_size,
-                  out_dir='/home/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/'):
+                  out_dir='/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/'):
     """
     Def:
     For a given galaxy, name must be specified, take the ra and dec
     and extract a postage stamp centred on that point of the given
     region size. For galfitting an appropriate size might be something
-    like a 6 arcsecond square box. This postage stamp is then save with
+    like a 6 arcsecond square box. This postage stamp is then saved with
     the galaxy name along with stamp.fits - the header information from the
     given file is also saved.
     Exactly the same procedure will be applied to the weight map which is in
@@ -70,11 +70,11 @@ def extract_stamp(galaxy_name,
     # save the SCI and WHT headers as different things
     sci_header = table[1].header
     sci_data = table[1].data
-    sci_name = out_dir + galaxy_name + '_stamp.fits'
+    sci_name = out_dir + '/stamps/' + galaxy_name + '_stamp.fits'
 
     wht_header = table[2].header
     wht_data = table[2].data
-    wht_name = out_dir + galaxy_name + '_rms.fits'
+    wht_name = out_dir + '/rms_maps/' + galaxy_name + '_rms.fits'
 
     # little trick here - want an rms map so take one over sqrt(wht_data)
     wht_data = 1 / np.sqrt(wht_data)
@@ -106,7 +106,7 @@ def extract_stamp(galaxy_name,
     wht_hdu.writeto(wht_name, clobber=True)
 
 def rotate_outputs(galaxy_name,
-                   search_dir='/home/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/'):
+                   search_dir='/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/'):
 
     """
     Def:
@@ -134,8 +134,16 @@ def rotate_outputs(galaxy_name,
     sci_name = search_dir + galaxy_name + '_stamp.fits'
     sci_rot_name = search_dir + galaxy_name + '_stamp_rot.fits'
 
+    if os.path.isfile(sci_rot_name):
+
+        os.system('rm %s' % sci_rot_name)
+
     rms_name = search_dir + galaxy_name + '_rms.fits'
     rms_rot_name = search_dir + galaxy_name + '_rms_rot.fits'
+
+    if os.path.isfile(rms_rot_name):
+
+        os.system('rm %s' % rms_rot_name)
 
     table_sci = fits.open(sci_name)
 
@@ -170,6 +178,164 @@ def rotate_outputs(galaxy_name,
 #                              data=rms_rot_data)
 #    rms_hdu.writeto(rms_rot_name, clobber=True)
 
+def rotate_field(field_name,
+                 drz_extension,
+                 wht_extension):
 
-extract_stamp('nc47', '/home/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F160W/icl802010_drz.fits', 334.3343208, 0.2921527778, 8)
-rotate_outputs('nc47')
+    """
+    Def:
+    Rather than rotating each of the postage stamps and associated products, 
+    which will be a pain for galfit - why don't we rotate the field? Then
+    can run sextractor on that. My concern is preservation of coordinates, 
+    but worth giving that a shot.
+
+    Input:
+            field_name - name and directory location of the 
+            cosmic field.
+
+    Output: field_name_rotated.fits - rotated equivalent
+    """
+
+    # start by opening the two files again
+    table_sci = fits.open(field_name)
+
+    field_rot_name = field_name[:-5] + '_rotated.fits'
+
+    if os.path.isfile(field_rot_name):
+
+        os.system('rm %s' % field_rot_name)
+
+    # read in the rotation keyword
+    rot_angle = table_sci[drz_extension].header['ORIENTAT']
+
+    # save the drz data to a separate temporary file for the rotation
+
+    hdu = fits.PrimaryHDU(header=table_sci[drz_extension].header,
+                          data=table_sci[drz_extension].data)
+
+    hdu.writeto('temp.fits',
+                clobber=True)
+
+    # and apply the rotations
+    pyraf.iraf.rotate('temp.fits',
+                      field_rot_name,
+                      rot_angle,
+                      interp='spline3')
+
+    # clean up the temporary pre-rotation file
+    os.system('rm temp.fits')
+
+    rotated_drz_data = fits.open(field_rot_name)[0].data
+
+    rotated_drz_header = fits.open(field_rot_name)[0].header
+
+    os.system('rm %s' % field_rot_name)
+
+    # save the wht data to a separate temporary file for the rotation
+
+    hdu = fits.PrimaryHDU(header=table_sci[wht_extension].header,
+                          data=table_sci[wht_extension].data)
+
+    hdu.writeto('temp.fits',
+                clobber=True)
+
+    # and apply the rotations
+    pyraf.iraf.rotate('temp.fits',
+                      field_rot_name,
+                      rot_angle,
+                      interp='spline3')
+
+    # clean up the temporary pre-rotation file
+    os.system('rm temp.fits')
+
+    rotated_wht_data = fits.open(field_rot_name)[0].data
+
+    rotated_wht_header = fits.open(field_rot_name)[0].header
+
+    os.system('rm %s' % field_rot_name)
+
+    # Now rotation has been applied - need to open up this file and
+    # save the data to something different
+
+    # read in the other data - save as new fits object
+
+    hdu = fits.PrimaryHDU(header=table_sci[0].header)
+
+    hdu.writeto(field_rot_name,
+                clobber=True)
+
+    fits.append(field_rot_name,
+                data=rotated_drz_data,
+                header=rotated_drz_header)
+
+    fits.append(field_rot_name,
+                data=rotated_wht_data,
+                header=rotated_wht_header)
+
+    fits.append(field_rot_name,
+                data=table_sci[3].data,
+                header=table_sci[3].header)
+
+    fits.append(field_rot_name,
+                data=table_sci[4].data,
+                header=table_sci[4].header)
+
+
+def save_to_directory(gal_name,
+                      pointing,
+                      actual_name):
+
+    """
+    Def:
+    Take the pseudo galfits and save to the SSA directories  
+    """
+
+    galaxy_short = gal_name + '_output.fits'
+
+    galaxy = '/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/galfit_outputs/' + gal_name + '_output.fits'
+    galaxy_rms = '/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/rms_maps/' + gal_name + '_rms.fits'
+
+    # open up the first 
+    table = fits.open(galaxy, mode='update')
+    divider = fits.open(galaxy_rms)[0].data
+
+    divider = divider[10:51, 10:51]
+
+    table[1].data = table[1].data / divider
+    table[2].data = table[2].data / divider
+    table[3].data = table[3].data / divider
+
+    table.flush()
+
+    table.close()
+
+    # now copy to the correct pointing directory
+    # and change name to what will be the actual galaxy name
+
+    if pointing == 1:
+
+        destination_dir = '/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/'
+
+    if pointing == 2:
+
+        destination_dir = '/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/'
+
+    # copy to new directory 
+    copy_name = destination_dir + galaxy_short
+
+    os.system('cp %s %s' % (galaxy, destination_dir))
+
+    # and change name to the actual galaxy name
+
+    replacement_name = destination_dir + 'combine_sci_reconstructed_' + actual_name + '_galfit.fits'
+
+    os.system('mv %s %s' % (copy_name, replacement_name))
+
+    # that should be it
+
+
+
+save_to_directory('n_m25', 1, 'n_m25')
+#extract_stamp('n3_009', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F160W/ib4dh1010_drz_rotated.fits', 334.3680416666,  0.2032222222, 8)
+#rotate_outputs('nc47')
+#rotate_field('/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F160W/ib4di1010_drz.fits', 1, 2)

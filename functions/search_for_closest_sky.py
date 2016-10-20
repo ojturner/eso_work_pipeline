@@ -42,5 +42,7 @@ def search(names,
 	    return names[f]
 	elif b_index < f_index:
 	    return names[b]
+	elif (f_index == b_index) and types[f] == 'S' and types[b] == 'S':
+		return names[b_index]
 	else:
 	    raise IndexError('The indices should not be equal! Check observation list order')

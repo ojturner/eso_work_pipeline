@@ -43,6 +43,9 @@ class cubeOps(object):
         self.Table = fits.open(fileName)
 
         # Variable housing the primary data cube
+        # of course, things will break if trying to do the
+        # reconstructed cube and the first arm isn't in operation
+
         self.data = self.Table[1].data
 
         # Primary Header
@@ -111,8 +114,31 @@ class cubeOps(object):
 
         self.gal_name = str(self.gal_name)
 
-        # Collapse over the wavelength axis to get an image
-        self.imData = np.nanmedian(self.data, axis=0)
+        # this needs to be attempted, not simply executed.
+        # in the case that Table[1].data is empty this will
+        # throw an error
+
+        try:
+            # Collapse over the wavelength axis to get an image
+            self.imData = np.nanmedian(self.data, axis=0)
+
+        except IndexError:
+
+            # and one more layer of defence
+
+            try:
+
+                # set a different arm as the data
+                self.data = self.Table[2].data
+
+                self.imData = np.nanmedian(self.data, axis=0)
+
+            except IndexError:
+
+                self.data = self.Table[3].data
+
+                self.imData = np.nanmedian(self.data, axis=0)
+
 
         try:
 
@@ -1117,11 +1143,17 @@ class cubeOps(object):
 
         colCax = colAx.imshow(self.imData, interpolation='bicubic')
 
-        colAx.contour(x_full,
-                      y_full,
-                      data_fitted,
-                      8,
-                      colors='w')
+        try:
+
+            colAx.contour(x_full,
+                          y_full,
+                          data_fitted,
+                          8,
+                          colors='w')
+
+        except ValueError:
+
+            print '[INFO] : Problem setting contours'
 
         colFig.colorbar(colCax)
 

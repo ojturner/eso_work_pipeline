@@ -123,7 +123,7 @@ class vel_field(object):
 
         try:
 
-            self.sig_table = fits.open('%sint_sig_field.fits' % self.fileName[:-14])
+            self.sig_table = fits.open('%ssig_field.fits' % self.fileName[:-14])
 
             self.sig_data = self.sig_table[0].data
 
@@ -3808,6 +3808,7 @@ class vel_field(object):
                                            psf_factor,
                                            sersic_factor,
                                            m_factor,
+                                           light_profile,
                                            smear=False):
 
         """
@@ -3850,13 +3851,11 @@ class vel_field(object):
             vel_2d = psf.bin_by_factor(vel_2d,
                                        m_factor)
 
-        print 'computed'
-
         pa = theta[0]
 
-        if smear:
+        rt = theta[1]
 
-            print 'smearing'
+        if smear:
 
             vel_2d = psf.cube_blur(vel_2d,
                                    redshift,
@@ -3868,6 +3867,9 @@ class vel_field(object):
                                    psf_factor,
                                    sersic_factor,
                                    pa,
+                                   inc,
+                                   rt,
+                                   light_profile,
                                    sigma,
                                    sersic_n)
 
@@ -3887,6 +3889,7 @@ class vel_field(object):
                                psf_factor,
                                sersic_factor,
                                m_factor,
+                               light_profile,
                                smear=False):
         """
         Def: Return the log likelihood for the velocity field function.
@@ -3921,6 +3924,7 @@ class vel_field(object):
                                                         psf_factor,
                                                         sersic_factor,
                                                         m_factor,
+                                                        light_profile,
                                                         smear)
 
         # find the grid of inverse sigma values
@@ -3942,10 +3946,11 @@ class vel_field(object):
         Set an uninformative prior distribution for the parameters in the model
         """
 
-        pa, rt, vasym = theta
+        const, pa, rt, vasym = theta
 
-        if 0 < pa < 2 * np.pi and \
-           0.5 < rt < 7.5 and \
+        if -50 < const < 50 and \
+           0 < pa < 2 * np.pi and \
+           0.1 < rt < 7.5 and \
            0 < vasym < 350:
 
             return 0.0
@@ -3966,6 +3971,7 @@ class vel_field(object):
                                psf_factor,
                                sersic_factor,
                                m_factor,
+                               light_profile,
                                smear=False):
 
         lp = self.lnprior_fixed_inc_fixed(theta)
@@ -3987,6 +3993,7 @@ class vel_field(object):
                                                 psf_factor,
                                                 sersic_factor,
                                                 m_factor,
+                                                light_profile,
                                                 smear)
 
     def run_emcee_fixed_inc_fixed(self,
@@ -4006,13 +4013,13 @@ class vel_field(object):
                                   psf_factor,
                                   sersic_factor,
                                   m_factor,
+                                  light_profile,
                                   smear=False):
 
         """
         Def:
         Need to add a description to this
-        """
-
+        """        
         ndim = len(theta)
 
         pos = [theta + 1e-4*np.random.randn(ndim) for i in range(nwalkers)]
@@ -4032,6 +4039,7 @@ class vel_field(object):
                                               psf_factor,
                                               sersic_factor,
                                               m_factor,
+                                              light_profile,
                                               smear])
 
         for i, (pos, lnp, state) in enumerate(sampler.sample(pos,

@@ -24,11 +24,9 @@ from vel_field_class import vel_field
 
 # Create an instance of the class
 pipe_methods = pipelineOps()
-cube = cubeOps('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_bs008543.fits')
+cube = cubeOps('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208.fits')
 wave_array = cube.wave_array
-v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_'
-                     + 'goods_p1_0.8_10_better/Science/combine_sci_reconstru'
-                     + 'cted_bs008543_vel_field.fits', 22, 15)
+
 #galaxy = galPhys('/scratch2/oturner/disk1/turner/DATA/Gals2/comb/Science/comp_spectrum.fits', 0)
 #sky_cube = cubeOps(kskyCube)
 
@@ -78,8 +76,8 @@ v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/unc
 #hobjframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:05:24.218_Corrected_11_spline3_Shifted.fits'
 #hskyframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:03:33.904.fits'
 
-combine_input = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_h/all_nights.txt'
-sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_h'
+combine_input = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_k_telluric/all_nights.txt'
+sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_k_telluric'
 #infile = '/scratch2/oturner/disk1/turner/DATA/all_names_new.txt'
 #combNames = '/scratch2/oturner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/Instances/gals_names.txt'
 #obj_names = '/scratch2/oturner/disk1/turner/DATA/NGC55/YJ/Calibrations/shifted_object_names.txt'
@@ -97,11 +95,19 @@ sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_h'
 
 guess_params = [18.4515843627, 17.7671445415, 1.10786694516, 5.76470601635, 1.09264956556, 165.2541589594]
 guess_params_fixed = [1.04999129056,  5.80554889021,   0.106855839229,  65.2463520223]
-guess_params_fixed_inc_fixed = [5.80554889021,   3.0,  105.2463520223]
+guess_params_fixed_inc_fixed = [2.55716395765,   1.85781021797,   50.936023396]
 
-
+v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_'
+                     + 'goods_p1_0.8_10_better/Science/combine_sci_reconstru'
+                     + 'cted_cdfs_lbg_23_vel_field.fits',16.5,   17.5)
 # COMPUTE THE BEAM SMEAR #
-
+flux_field = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_'
+                     + 'goods_p1_0.8_10_better/Science/combine_sci_reconstru'
+                     + 'cted_cdfs_lbg_23_flux_field.fits')[0].data
+for i in range(flux_field.shape[0]):
+    for j in range(flux_field.shape[1]):
+        if np.isnan(flux_field[i,j]):
+            flux_field[i,j] = np.nanmax(flux_field) / 100.0
 #print 'computing normal resolution data'
 #v_data_normal = v_field.compute_model_grid_fixed(guess_params_fixed, 24, 17)
 #print 'computing high resolution data'
@@ -113,20 +119,21 @@ guess_params_fixed_inc_fixed = [5.80554889021,   3.0,  105.2463520223]
 
 v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
                                   1.2,
-                                  3.473288,
-                                  wave_array,
-                                  21.95,
-                                  15.78,
-                                  200,
-                                  500,
-                                  50,
-                                  0.5,
-                                  3,
-                                  50,
-                                  0.1,
-                                  10,
-                                  10,
-                                  10,
+                                  redshift=3.24955022364,
+                                  wave_array=wave_array,
+                                  xcen=13.5,
+                                  ycen=  20.6,
+                                  nsteps=200,
+                                  nwalkers=500,
+                                  burn_no=50,
+                                  seeing=0.50,
+                                  sersic_n=1,
+                                  sigma=40,
+                                  pix_scale=0.1,
+                                  psf_factor=1,
+                                  sersic_factor=1,
+                                  m_factor=4,
+                                  light_profile=flux_field,
                                   smear=True)
 
 
@@ -140,20 +147,30 @@ v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
 #                                              nwalkers=200,
 #                                              nsteps=500,
 #                                              burn_no=50,
-#                                              r_aper=0.8,
-#                                              d_aper=0.6,
+#                                              r_aper=0.6,
+#                                              d_aper=0.4,
 #                                              seeing=0.5,
-#                                              sersic_n=2.0,
-#                                              sigma=60,
+#                                              sersic_n=1.0,
+#                                              sigma=50,
 #                                              pix_scale=0.1,
-#                                              psf_factor=1,
-#                                              sersic_factor=1,
-#                                              m_factor=1,
-#                                              smear=False)
+#                                              psf_factor=4,
+#                                              sersic_factor=4,
+#                                              m_factor=4,
+#                                              smear=True)
 
 # APPLYING VELOCITY FIELD COMPUTATION # 
 
-#pipe_methods.multi_vel_field_stott('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt', 'oiii', 3.0, g_c_min=0.5, g_c_max=1.5, seeing=0.5, pix_scale=0.1, intrin_sigma=75, sersic_n=3.0, method='mean')
+#pipe_methods.multi_vel_field_stott('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
+#                                   'oiii',
+#                                    3.0,
+#                                    g_c_min=0.5,
+#                                    g_c_max=1.5,
+#                                    seeing=0.5,
+#                                    pix_scale=0.1,
+#                                    psf_factor=1,
+#                                    intrin_sigma=75,
+#                                    sersic_n=3.0,
+#                                    method='mean')
 
 # CREATING THE PLOT GRIDS # 
 
@@ -164,9 +181,9 @@ v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
 #                                                  sersic_n=2.0,
 #                                                  sigma=60,
 #                                                  pix_scale=0.1,
-#                                                  psf_factor=1.0,
-#                                                  sersic_factor=1.0,
-#                                                  m_factor=1.0,
+#                                                  psf_factor=4.0,
+#                                                  sersic_factor=4.0,
+#                                                  m_factor=4.0,
 #                                                  smear=False)
 
 # V OVER SIGMA # 

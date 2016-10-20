@@ -637,6 +637,8 @@ class pipelineOps(object):
 
                 objFile = names[i]
 
+                print objFile
+
                 skyFile = sky_search.search(names, types, i)
 
                 print '[INFO]: Subbing file: %s : ' % objFile
@@ -6233,6 +6235,7 @@ class pipelineOps(object):
 
                 print 'Nothing to combine for object %s' % name
 
+
     def combine_by_name_sky_object(self,
                                    sci_dir,
                                    combine_file,
@@ -6956,7 +6959,7 @@ class pipelineOps(object):
 
         mod = PolynomialModel(6)
 
-        pars = mod.guess(data_1_masked, x=wave_array)
+        pars = mod.make_params()
 
         # for the masked array to work need to assign the parameters
 
@@ -11828,7 +11831,7 @@ class pipelineOps(object):
 
         # construct gaussian model using lmfit
 
-        gmod = GaussianModel()
+        gmod = GaussianModel(missing='drop')
 
         # set the initial parameter values
 
@@ -12097,7 +12100,7 @@ class pipelineOps(object):
                                 seeing,
                                 pix_scale,
                                 psf_factor,
-                                intrin_sigma=80,
+                                intrin_sigma=50,
                                 sersic_n=2.0,
                                 tol=30,
                                 method='median',
@@ -12321,8 +12324,22 @@ class pipelineOps(object):
                 # do the gaussian fitting
 
                 plt.close('all')
-                gauss_values, covar = self.gauss_fit(wave_array[lower_limit: upper_limit],
-                                                     spaxel_spec[lower_limit: upper_limit])
+
+                try:
+
+
+                    gauss_values, covar = self.gauss_fit(wave_array[lower_limit: upper_limit],
+                                                         spaxel_spec[lower_limit: upper_limit])
+
+                except TypeError:
+
+                    gauss_values = {'amplitude': np.nan,
+                                    'sigma': np.nan,
+                                    'center': np.nan}
+
+                    covar = np.zeros(shape=(3, 3))
+
+                    covar = covar * np.nan
 
                 # define the ratio of line counts to the gaussian fitting flux
 
@@ -17167,7 +17184,7 @@ class pipelineOps(object):
 
         data_model = data_model * mask_array
 
-        table_sig = fits.open('%s_int_sig_field.fits' % infile[:-5])
+        table_sig = fits.open('%s_sig_field.fits' % infile[:-5])
 
         data_sig = table_sig[0].data
 
@@ -18272,8 +18289,8 @@ class pipelineOps(object):
 
         im = ax[0][4].imshow(b_cont2,
                           cmap=cmap,
-                          vmax=0.01,
-                          vmin=-0.04)
+                          vmax=0.1,
+                          vmin=-0.4)
 
         y_full, x_full = np.indices(b_cont2.shape)
         ax[0][4].contour(x_full,
@@ -18293,7 +18310,7 @@ class pipelineOps(object):
         ax[0][4].set_title('Cont_2')
 
         # OIII NARROWBAND
-
+        print 'OIII PEAK: %s %s' % (oiii_peak_x, oiii_peak_y)
         ax[1][0].scatter(oiii_peak_y,
                          oiii_peak_x,
                          marker='+',
@@ -18855,112 +18872,104 @@ class pipelineOps(object):
 
         fig.tight_layout()
 
-        # plt.show()
 
-        fig.savefig('%s_grid_fixed_inc_fixed.png' % infile[:-5])
 
-        plt.close('all')
-
-        fig, ax = plt.subplots(1, 1, figsize=(10,10))
-
-        ax.plot([y_h_low, y_h_high], [x_h_low, x_h_high],
-                   ls='--',
-                   color='aquamarine')
-        ax.plot([y_low, y_high], [x_low, x_high],
-                   ls='--',
-                   color='lightcoral',
-                   lw=2)
-
-        ax.imshow(m_data_mod,
-                  vmin=vel_min,
-                  vmax=vel_max,
-                  interpolation='nearest',
-                  cmap=cmap)
-
-        #plt.show()
-
-        plt.close('all')
-
-        fig, ax = plt.subplots(1, 1, figsize=(10,10))
-
-        ax.plot(x_max,
-                   mod_velocity_values_max,
-                   color='red',
-                   label='max_model')
-
-        ax.errorbar(x_max,
-                       real_velocity_values_max,
-                       yerr=real_error_values_max,
-                       fmt='o',
-                       color='red',
-                       label='max_data')
-
-        ax.plot(x_50,
-                   mod_velocity_values_50,
-                   color='blue',
-                   label='50_model')
-
-        ax.errorbar(x_50,
-                       real_velocity_values_50,
-                       yerr=real_error_values_50,
-                       fmt='o',
-                       color='blue',
-                       label='50_data')
-
-        ax.plot(x_16,
-                   mod_velocity_values_16,
-                   color='orange',
-                   linestyle='--',
-                   label='16_model')
-
-        ax.plot(x_84,
-                   mod_velocity_values_84,
-                   color='purple',
-                   linestyle='--',
-                   label='84_model')
-
-        ax.set_xlim(-1.5, 1.5)
-
-        # ax.legend(prop={'size':5}, loc=1)
-
-        ax.set_title('Model and Real Velocity')
-
-        # ax.set_ylabel('velocity (kms$^{-1}$)')
-
-        ax.set_xlabel('arcsec')
-
-        ax.axhline(0, color='silver', ls='-.')
-        ax.axvline(0, color='silver', ls='-.')
-        #ax.axhline(va, color='silver', ls='--')
-        #ax.axhline(-1.*va, color='silver', ls='--')
-
-        #plt.show()
-
-        plt.close('all')
-
-        # create a table to record all of the top quantities
-        # that we want to examine - need to list and return 
-        # the parameter values each time
-
-#        column_names = ['Name',
-#                        'Galfit_R_e(Kpc)',
-#                        'Numerical_R_e(Kpc)',
-#                        'Numerical_R_9(Kpc)',
-#                        'Galfit_Ar',
-#                        'Numerical_Ar',
-#                        'hst_pa',
-#                        'dynamical_pa',
-#                        'rotation_pa',
-#                        'Numerical_pa',
-#                        'Maximum_data_Velocity',
-#                        'Maximum_model_velocity']
-
+#        plt.close('all')
+#        fig, ax = plt.subplots(1, 1, figsize=(10,10))
+#        ax.plot([y_h_low, y_h_high], [x_h_low, x_h_high],
+#                   ls='--',
+#                   color='aquamarine')
+#        ax.plot([y_low, y_high], [x_low, x_high],
+#                   ls='--',
+#                   color='lightcoral',
+#                   lw=2)
+#        ax.imshow(m_data_mod,
+#                  vmin=vel_min,
+#                  vmax=vel_max,
+#                  interpolation='nearest',
+#                  cmap=cmap)
+#        #plt.show()
+#        plt.close('all')
+#        fig, ax = plt.subplots(1, 1, figsize=(10,10))
+#        ax.plot(x_max,
+#                   mod_velocity_values_max,
+#                   color='red',
+#                   label='max_model')
+#        ax.errorbar(x_max,
+#                       real_velocity_values_max,
+#                       yerr=real_error_values_max,
+#                       fmt='o',
+#                       color='red',
+#                       label='max_data')
+#        ax.plot(x_50,
+#                   mod_velocity_values_50,
+#                   color='blue',
+#                   label='50_model')
+#        ax.errorbar(x_50,
+#                       real_velocity_values_50,
+#                       yerr=real_error_values_50,
+#                       fmt='o',
+#                       color='blue',
+#                       label='50_data')
+#        ax.plot(x_16,
+#                   mod_velocity_values_16,
+#                   color='orange',
+#                   linestyle='--',
+#                   label='16_model')
+#        ax.plot(x_84,
+#                   mod_velocity_values_84,
+#                   color='purple',
+#                   linestyle='--',
+#                   label='84_model')
+#        ax.set_xlim(-1.5, 1.5)
+#        # ax.legend(prop={'size':5}, loc=1)
+#        ax.set_title('Model and Real Velocity')
+#        # ax.set_ylabel('velocity (kms$^{-1}$)')
+#        ax.set_xlabel('arcsec')
+#        ax.axhline(0, color='silver', ls='-.')
+#        ax.axvline(0, color='silver', ls='-.')
+#        #ax.axhline(va, color='silver', ls='--')
+#        #ax.axhline(-1.*va, color='silver', ls='--')
+#        #plt.show()
+#        plt.close('all')
+#        # create a table to record all of the top quantities
+#        # that we want to examine - need to list and return 
+#        # the parameter values each time
+##        column_names = ['Name',
+##                        'Galfit_R_e(Kpc)',
+##                        'Numerical_R_e(Kpc)',
+##                        'Numerical_R_9(Kpc)',
+##                        'Galfit_Ar',
+##                        'Numerical_Ar',
+##                        'hst_pa',
+##                        'dynamical_pa',
+##                        'rotation_pa',
+##                        'Numerical_pa',
+##                        'Maximum_data_Velocity',
+##                        'Maximum_model_velocity']
 
         # some calculations for the final table
 
         # extracting the maximum velocity from the data
         data_velocity_value = (abs(np.nanmax(real_velocity_values_50)) + \
                                 abs(np.nanmin(real_velocity_values_50))) / 2.0
+
+        # and also want the associated velocity error
+        minimum_vel_error = real_error_values_50[np.nanargmin(real_velocity_values_50)]
+        maximum_vel_error = real_error_values_50[np.nanargmax(real_velocity_values_50)]
+
+        # and combine in quadrature
+        data_velocity_error = 0.5 * np.sqrt(minimum_vel_error**2 + maximum_vel_error**2)
+
+        # sigma maps error
+        # in quadrature take the last few values
+        # in the actual data
+        low_sigma_index, high_sigma_index = rt_pa.find_first_valid_entry(sig_values_50) 
+        data_sigma_error = 0.5 * np.sqrt(sig_error_values_50[low_sigma_index]**2 + sig_error_values_50[high_sigma_index]**2)
+
+        # numerical value of sigma at the edges
+        data_sigma_value = 0.5 * (sig_values_50[low_sigma_index] + sig_values_50[high_sigma_index])
+
 
         b_data_velocity_value = (abs(np.nanmax(best_pa_vel)) + \
                                   abs(np.nanmin(best_pa_vel))) / 2.0
@@ -19119,6 +19128,17 @@ class pipelineOps(object):
                        sigma_o]
 
         print 'CONSTANTS: %s %s %s' % (dyn_constant, rot_constant, hst_constant)
+        print 'OBSERVED_VELOCITY_DYNAMIC_PA: %s' % abs(data_velocity_value / np.sin(inclination_galfit))
+        print 'OBSERVED_VEL_ERROR_DYNAMIC_PA: %s' % data_velocity_error
+        print 'OBSERVED_SIGMA_DYNAMIC_PA: %s' % data_sigma_value
+        print 'OBSERVED_SIGMA_ERROR: %s' % data_sigma_error
+        print '1D_ALONG_ROTATED_PA: %s' % abs(b_v18 / np.sin(inclination_galfit))
+        print '2D_ALONG_DYN_PA: %s' % abs(v_2d_r18 / np.sin(inclination_galfit))
+
+        plt.show()
+
+        fig.savefig('%s_grid_fixed_inc_fixed.png' % infile[:-5])
+
 
         return data_values
 

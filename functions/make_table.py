@@ -65,7 +65,7 @@ def table_create(column_names,
     """
 
     # build the save file name
-    file_name = save_dir + 'properties_table.txt'
+    file_name = save_dir + 'dynamical_mass.cat'
 
     if os.path.isfile(file_name):
 

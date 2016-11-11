@@ -43,7 +43,7 @@ def extract_stamp(galaxy_name,
                   ra,
                   dec,
                   region_size,
-                  out_dir='/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/'):
+                  out_dir='/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN'):
     """
     Def:
     For a given galaxy, name must be specified, take the ra and dec
@@ -292,14 +292,14 @@ def save_to_directory(gal_name,
 
     galaxy_short = gal_name + '_output.fits'
 
-    galaxy = '/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/galfit_outputs/' + gal_name + '_output.fits'
-    galaxy_rms = '/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/rms_maps/' + gal_name + '_rms.fits'
+    galaxy = '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/galfit_output/' + gal_name + '_output.fits'
+    galaxy_rms = '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/rms_maps/' + gal_name + '_rms.fits'
 
     # open up the first 
     table = fits.open(galaxy, mode='update')
     divider = fits.open(galaxy_rms)[0].data
 
-    divider = divider[10:51, 10:51]
+    #divider = divider[10:51, 10:51]
 
     table[1].data = table[1].data / divider
     table[2].data = table[2].data / divider
@@ -335,7 +335,7 @@ def save_to_directory(gal_name,
 
 
 
-save_to_directory('n_m25', 1, 'n_m25')
-#extract_stamp('n3_009', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F160W/ib4dh1010_drz_rotated.fits', 334.3680416666,  0.2032222222, 8)
+save_to_directory('c10', 2, 's_sa22b-c10_left')
+#extract_stamp('c10', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_5_rotated.fits', 334.356291667  , 0.1164027778 , 5.0)
 #rotate_outputs('nc47')
-#rotate_field('/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F160W/ib4di1010_drz.fits', 1, 2)
+#rotate_field('/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_3.fits', 1, 2)

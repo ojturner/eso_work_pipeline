@@ -1,4 +1,4 @@
-# 2d gaussina fitting
+# 2d gaussian fitting
 # given a set of input data, fit with a 2d gaussian
 # and return the evaluated model
 # O.J.Turner 2016

@@ -155,6 +155,8 @@ class vel_field(object):
 
         self.param_file_fixed_inc_vary = self.fileName[:-5] + '_params_fixed_inc_vary.txt'
 
+        self.param_file_chi_squared = self.fileName[:-5] + '_chi_squared_params.txt'
+
         #initialise x and y dimensions
 
         self.xpix = self.vel_data.shape[0]
@@ -738,18 +740,18 @@ class vel_field(object):
 
         if smear:
 
-            vel_2d = psf.cube_blur(vel_2d,
-                                   redshift,
-                                   wave_array,
-                                   xcen,
-                                   ycen,
-                                   seeing,
-                                   pix_scale,
-                                   psf_factor,
-                                   sersic_factor,
-                                   pa,
-                                   sigma,
-                                   sersic_n)
+            vel_2d, sig_2d = psf.cube_blur(vel_2d,
+                                           redshift,
+                                           wave_array,
+                                           xcen,
+                                           ycen,
+                                           seeing,
+                                           pix_scale,
+                                           psf_factor,
+                                           sersic_factor,
+                                           pa,
+                                           sigma,
+                                           sersic_n)
 
         return vel_2d
 
@@ -3824,6 +3826,16 @@ class vel_field(object):
 
         vel_array = []
 
+        # need to increase rt by the model factor, m_factor.
+
+        pa, rt, v = theta
+
+        rt = rt * m_factor
+
+        # and reconstruct theta
+
+        theta = [pa, rt, v]
+
         # compute the model at each spaxel location
 
         for xpos, ypos in zip(xbin, ybin):
@@ -3857,21 +3869,116 @@ class vel_field(object):
 
         if smear:
 
-            vel_2d = psf.cube_blur(vel_2d,
-                                   redshift,
-                                   wave_array,
-                                   xcen,
-                                   ycen,
-                                   seeing,
-                                   pix_scale,
-                                   psf_factor,
-                                   sersic_factor,
-                                   pa,
-                                   inc,
-                                   rt,
-                                   light_profile,
-                                   sigma,
-                                   sersic_n)
+            vel_2d, sigma_2d = psf.cube_blur(vel_2d,
+                                             redshift,
+                                             wave_array,
+                                             xcen,
+                                             ycen,
+                                             seeing,
+                                             pix_scale,
+                                             psf_factor,
+                                             sersic_factor,
+                                             pa,
+                                             inc,
+                                             rt,
+                                             light_profile,
+                                             sigma,
+                                             sersic_n)
+
+
+        return vel_2d
+
+    def compute_model_grid_for_chi_squared(self,
+                                           theta,
+                                           inc,
+                                           redshift,
+                                           wave_array,
+                                           xcen,
+                                           ycen,
+                                           seeing,
+                                           sersic_n,
+                                           sigma,
+                                           pix_scale,
+                                           psf_factor,
+                                           sersic_factor,
+                                           m_factor,
+                                           light_profile,
+                                           smear=False):
+
+        """
+        Def:
+        Use the grid function to construct a basis for the model.
+        Then apply the disk function to each spaxel in the basis
+        reshape back to 2d array and plot the model velocity
+        """
+
+        xbin, ybin = self.grid_factor(m_factor)
+
+        # setup list to house the velocity measurements
+
+        vel_array = []
+
+        # need to increase rt by the model factor, m_factor.
+
+        pa, rt, v = theta
+
+        rt = rt * m_factor
+
+        # and reconstruct theta
+
+        theta = [pa, rt, v]
+
+        # compute the model at each spaxel location
+
+        for xpos, ypos in zip(xbin, ybin):
+
+            # run the disk function
+
+            vel_array.append(self.disk_function_fixed_inc_fixed(theta,
+                                                                xcen * m_factor,
+                                                                ycen * m_factor,
+                                                                inc,
+                                                                xpos,
+                                                                ypos))
+
+        # create numpy array from the vel_array list
+
+        vel_array = np.array(vel_array)
+
+        # reshape back to the chosen grid dimensions
+
+        vel_2d = vel_array.reshape((self.xpix * m_factor,
+                                    self.ypix * m_factor))
+
+        if float(m_factor) != 1.0:
+
+            vel_2d = psf.bin_by_factor(vel_2d,
+                                       m_factor)
+
+        pa = theta[0]
+
+        rt = theta[1]
+
+        if smear:
+
+            vel_2d_blurred, sigma_2d = psf.cube_blur(vel_2d,
+                                                     redshift,
+                                                     wave_array,
+                                                     xcen,
+                                                     ycen,
+                                                     seeing,
+                                                     pix_scale,
+                                                     psf_factor,
+                                                     sersic_factor,
+                                                     pa,
+                                                     inc,
+                                                     rt,
+                                                     light_profile,
+                                                     sigma,
+                                                     sersic_n)
+
+
+            return [vel_2d, vel_2d_blurred, sigma_2d]
 
         return vel_2d
 
@@ -3946,12 +4053,11 @@ class vel_field(object):
         Set an uninformative prior distribution for the parameters in the model
         """
 
-        const, pa, rt, vasym = theta
+        pa, rt, vasym = theta
 
-        if -50 < const < 50 and \
-           0 < pa < 2 * np.pi and \
-           0.1 < rt < 7.5 and \
-           0 < vasym < 350:
+        if 0 < pa < 2 * np.pi and \
+           0.005 < rt < 2.0 and \
+           0 < vasym < 250:
 
             return 0.0
 
@@ -3996,6 +4102,93 @@ class vel_field(object):
                                                 light_profile,
                                                 smear)
 
+    def grid_fixed_inc_fixed_params(self, 
+                                    inc,
+                                    pa,
+                                    redshift,
+                                    wave_array,
+                                    xcen,
+                                    ycen,
+                                    seeing,
+                                    sersic_n,
+                                    sigma,
+                                    pix_scale,
+                                    psf_factor,
+                                    sersic_factor,
+                                    m_factor,
+                                    light_profile,
+                                    smear=True):
+
+        """
+        Def:
+        Instead of using MCMC, since we pretty much know what the
+        parameters are from earlier MCMC runs, can simply use a grid
+        based chi squared approach to find what the best velocity
+        and rt values are. i.e. what values of both of these give the
+        best match to the data - and are there degeneracies between the
+        value of rt and the beam smearing effect?
+        """
+
+        # first set up the parameter grids 
+
+        vel_grid = np.arange(20, 150, 1.0)
+
+        rt_grid = np.arange(0.1, 2, 0.1)
+
+        result_array = []
+
+        for i in range(len(vel_grid)):
+
+            stdout.write("\rObject %s %.1f%% complete" % (self.gal_name[:-15],
+                                                          100 * float(i) / len(vel_grid)))
+            stdout.flush()
+
+
+            for j in range(len(rt_grid)):
+
+                # set up theta
+                theta = [pa, rt_grid[j], vel_grid[i]]
+
+                result_array.append(self.lnlike_fixed_inc_fixed(theta,
+                                                                inc,
+                                                                redshift,
+                                                                wave_array,
+                                                                xcen,
+                                                                ycen,
+                                                                seeing,
+                                                                sersic_n,
+                                                                sigma,
+                                                                pix_scale,
+                                                                psf_factor,
+                                                                sersic_factor,
+                                                                m_factor,
+                                                                light_profile,
+                                                                smear=smear))
+
+        stdout.write('\n')
+
+        fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+        x = np.arange(0, len(vel_grid) * len(rt_grid), 1)
+        ax.plot(x, result_array)
+        #plt.show()
+        fig.savefig(self.gal_name[:-15] + '_chi_evaluations.png')
+        plt.close('all')
+
+        # process the results
+
+        result_array = np.array(result_array)
+
+        result_array = np.reshape(result_array,
+                                  newshape=(len(vel_grid), len(rt_grid)))
+
+        vel_idx, rt_idx = np.argwhere(result_array == np.max(result_array))[0]
+
+        print vel_grid[vel_idx]
+        print rt_grid[rt_idx]
+
+        return [vel_grid[vel_idx],
+                rt_grid[rt_idx]]
+
     def run_emcee_fixed_inc_fixed(self,
                                   theta,
                                   inc,
@@ -4014,7 +4207,7 @@ class vel_field(object):
                                   sersic_factor,
                                   m_factor,
                                   light_profile,
-                                  smear=False):
+                                  smear=True):
 
         """
         Def:
@@ -4176,6 +4369,7 @@ class vel_field(object):
                                         psf_factor,
                                         sersic_factor,
                                         m_factor,
+                                        light_profile,
                                         smear=False):
 
         """
@@ -4217,6 +4411,7 @@ class vel_field(object):
                                                             psf_factor,
                                                             sersic_factor,
                                                             m_factor,
+                                                            light_profile,
                                                             smear)
 
         model_50 = self.compute_model_grid_fixed_inc_fixed(theta_50,
@@ -4232,6 +4427,7 @@ class vel_field(object):
                                                            psf_factor,
                                                            sersic_factor,
                                                            m_factor,
+                                                           light_profile,
                                                            smear)
 
         model_16 = self.compute_model_grid_fixed_inc_fixed(theta_16,
@@ -4247,6 +4443,7 @@ class vel_field(object):
                                                             psf_factor,
                                                             sersic_factor,
                                                             m_factor,
+                                                            light_profile,
                                                             smear)
 
         model_84 = self.compute_model_grid_fixed_inc_fixed(theta_84,
@@ -4262,6 +4459,7 @@ class vel_field(object):
                                                             psf_factor,
                                                             sersic_factor,
                                                             m_factor,
+                                                            light_profile,
                                                             smear)
 
         # only want to see the evaluated model at the grid points
@@ -4353,6 +4551,7 @@ class vel_field(object):
                                              psf_factor,
                                              sersic_factor,
                                              m_factor,
+                                             light_profile,
                                              smear=False):
 
         """
@@ -4374,6 +4573,8 @@ class vel_field(object):
         # assign the best fit parameters to variables from the theta array
 
         # load in the file
+
+
 
         param_file = np.genfromtxt(self.param_file_fixed_inc_fixed)
 
@@ -4410,6 +4611,7 @@ class vel_field(object):
                                                             psf_factor,
                                                             sersic_factor,
                                                             m_factor,
+                                                            light_profile,
                                                             smear)
 
         model_50 = self.compute_model_grid_fixed_inc_fixed(theta_50,
@@ -4425,6 +4627,7 @@ class vel_field(object):
                                                            psf_factor,
                                                            sersic_factor,
                                                            m_factor,
+                                                           light_profile,
                                                            smear)
 
         model_16 = self.compute_model_grid_fixed_inc_fixed(theta_16,
@@ -4440,6 +4643,7 @@ class vel_field(object):
                                                             psf_factor,
                                                             sersic_factor,
                                                             m_factor,
+                                                            light_profile,
                                                             smear)
 
         model_84 = self.compute_model_grid_fixed_inc_fixed(theta_84,
@@ -4455,6 +4659,7 @@ class vel_field(object):
                                                             psf_factor,
                                                             sersic_factor,
                                                             m_factor,
+                                                            light_profile,
                                                             smear)
 
         # use the external rot_pa class to extract the 
@@ -4813,6 +5018,7 @@ class vel_field(object):
                      psf_factor,
                      sersic_factor,
                      m_factor,
+                     light_profile,
                      smear=False):
 
         """
@@ -4950,6 +5156,7 @@ class vel_field(object):
                                                                      psf_factor,
                                                                      sersic_factor,
                                                                      m_factor,
+                                                                     light_profile,
                                                                      smear)
 
         # evaluate the v2.2 parameter for each of the models

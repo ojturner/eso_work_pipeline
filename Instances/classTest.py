@@ -76,8 +76,8 @@ wave_array = cube.wave_array
 #hobjframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:05:24.218_Corrected_11_spline3_Shifted.fits'
 #hskyframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:03:33.904.fits'
 
-combine_input = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_k_telluric/all_nights.txt'
-sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_k_telluric'
+combine_input = '/scratch2/oturner/disk2/turner/DATA/KLENS_C2/combined_h_telluric/all_nights.txt'
+sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS_C2/combined_h_telluric'
 #infile = '/scratch2/oturner/disk1/turner/DATA/all_names_new.txt'
 #combNames = '/scratch2/oturner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/Instances/gals_names.txt'
 #obj_names = '/scratch2/oturner/disk1/turner/DATA/NGC55/YJ/Calibrations/shifted_object_names.txt'
@@ -95,19 +95,39 @@ sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS/combined_k_telluric'
 
 guess_params = [18.4515843627, 17.7671445415, 1.10786694516, 5.76470601635, 1.09264956556, 165.2541589594]
 guess_params_fixed = [1.04999129056,  5.80554889021,   0.106855839229,  65.2463520223]
-guess_params_fixed_inc_fixed = [2.55716395765,   1.85781021797,   50.936023396]
+guess_params_fixed_inc_fixed = [1.01829519442,   0.5,  116]
 
-v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_'
-                     + 'goods_p1_0.8_10_better/Science/combine_sci_reconstru'
-                     + 'cted_cdfs_lbg_23_vel_field.fits',16.5,   17.5)
+v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/'
+                     + 'uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstru'
+                     + 'cted_bs016759_vel_field.fits',20.733, 19.211)
+dim_x = v_field.xpix
+dim_y = v_field.ypix
+
+sersic_field = psf.sersic_2d_astropy(dim_x=dim_y,
+                                     dim_y=dim_x,
+                                     rt=1.96,
+                                     n=1.0,
+                                     a_r=0.6528,
+                                     pa=0.86,
+                                     xcen=10.38,
+                                     ycen= 16.64,
+                                     sersic_factor=50)
+
+#fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+#ax.imshow(np.log10(sersic_field))
+#plt.show()
+#plt.close('all')
+
 # COMPUTE THE BEAM SMEAR #
-flux_field = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_'
-                     + 'goods_p1_0.8_10_better/Science/combine_sci_reconstru'
-                     + 'cted_cdfs_lbg_23_flux_field.fits')[0].data
+flux_field = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/'
+                     + 'uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstru'
+                     + 'cted_bs016759_flux_field.fits')[0].data
 for i in range(flux_field.shape[0]):
     for j in range(flux_field.shape[1]):
         if np.isnan(flux_field[i,j]):
             flux_field[i,j] = np.nanmax(flux_field) / 100.0
+
+
 #print 'computing normal resolution data'
 #v_data_normal = v_field.compute_model_grid_fixed(guess_params_fixed, 24, 17)
 #print 'computing high resolution data'
@@ -117,24 +137,42 @@ for i in range(flux_field.shape[0]):
 
 # RUN EMCEE FIXED INC FIXED EXPERIMENT
 
-v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
-                                  1.2,
-                                  redshift=3.24955022364,
-                                  wave_array=wave_array,
-                                  xcen=13.5,
-                                  ycen=  20.6,
-                                  nsteps=200,
-                                  nwalkers=500,
-                                  burn_no=50,
-                                  seeing=0.50,
-                                  sersic_n=1,
-                                  sigma=40,
-                                  pix_scale=0.1,
-                                  psf_factor=1,
-                                  sersic_factor=1,
-                                  m_factor=4,
-                                  light_profile=flux_field,
-                                  smear=True)
+#v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
+#                                  inc=0.8838,
+#                                  redshift=3.60175699681,
+#                                  wave_array=wave_array,
+#                                  xcen=10.38  ,
+#                                  ycen=16.64 ,
+#                                  nsteps=200,
+#                                  nwalkers=500,
+#                                  burn_no=50,
+#                                  seeing=0.5,
+#                                  sersic_n=1,
+#                                  sigma=50,
+#                                  pix_scale=0.1,
+#                                  psf_factor=1,
+#                                  sersic_factor=1,
+#                                  m_factor=4,
+#                                  light_profile=sersic_field,
+#                                  smear=True)
+
+# GRID BASED model parameter estimation
+
+#v_field.grid_fixed_inc_fixed_params(inc=1.079,
+#                                    pa=4.87013204665,
+#                                    redshift=3.473288,
+#                                    wave_array=wave_array,
+#                                    xcen=21.95,
+#                                    ycen=15.78,
+#                                    seeing=0.5,
+#                                    sersic_n=1,
+#                                    sigma=40,
+#                                    pix_scale=0.1,
+#                                    psf_factor=1,
+#                                    sersic_factor=1,
+#                                    m_factor=4,
+#                                    light_profile=sersic_field,
+#                                    smear=True)
 
 
 # CHECK OUT THE AVERAGE SEEING
@@ -143,12 +181,12 @@ v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
 
 # APPLYING MODEL MCMC # 
 
-#pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
+#pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt',
 #                                              nwalkers=200,
 #                                              nsteps=500,
 #                                              burn_no=50,
-#                                              r_aper=0.6,
-#                                              d_aper=0.4,
+#                                              r_aper=0.8,
+#                                              d_aper=0.6,
 #                                              seeing=0.5,
 #                                              sersic_n=1.0,
 #                                              sigma=50,
@@ -165,26 +203,26 @@ v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
 #                                    3.0,
 #                                    g_c_min=0.5,
 #                                    g_c_max=1.5,
-#                                    seeing=0.5,
+#                                    seeing=0.6,
 #                                    pix_scale=0.1,
 #                                    psf_factor=1,
-#                                    intrin_sigma=75,
-#                                    sersic_n=3.0,
+#                                    intrin_sigma=50,
+#                                    sersic_n=1.0,
 #                                    method='mean')
 
 # CREATING THE PLOT GRIDS # 
 
-#pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
-#                                                  r_aper=0.5,
-#                                                  d_aper=0.3,
-#                                                  seeing=0.50,
-#                                                  sersic_n=2.0,
-#                                                  sigma=60,
-#                                                  pix_scale=0.1,
-#                                                  psf_factor=4.0,
-#                                                  sersic_factor=4.0,
-#                                                  m_factor=4.0,
-#                                                  smear=False)
+pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
+                                                  r_aper=0.8,
+                                                  d_aper=0.6,
+                                                  seeing=0.60,
+                                                  sersic_n=2.0,
+                                                  sigma=60,
+                                                  pix_scale=0.1,
+                                                  psf_factor=1.0,
+                                                  sersic_factor=50.0,
+                                                  m_factor=4.0,
+                                                  smear=True)
 
 # V OVER SIGMA # 
 
@@ -198,7 +236,7 @@ v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
 
 #pipe_methods.combine_by_name(sci_dir, combine_input, 0.25, 0.8, 10)
 
-#pipe_methods.combine_by_name(sci_dir, combine_input, 0.00001, 100, 100, star=False)
+#pipe_methods.combine_by_name(sci_dir, combine_input, 0.00001, 100, 5E-17, star=False)
 
 # PLOT PROPERTIES # 
 

@@ -11998,7 +11998,7 @@ class pipelineOps(object):
 
             mask_y_upper = entry[9]
 
-            noise_method = entry[16]
+            noise_method = entry[18]
 
             # define the science directory for each cube
             sci_dir = obj_name[:len(obj_name) - obj_name[::-1].find("/") - 1]
@@ -13156,56 +13156,11 @@ class pipelineOps(object):
 
         params_name = incube[:-5] + '_vel_field_params_fixed.txt'
 
-        if os.path.isfile(vel_field_name) and \
-                os.path.isfile(params_name):
-
-            print 'computing beam smear from model'
-
-            param_file = np.genfromtxt(params_name)
-
-            theta_50 = param_file[2][1:]
-
-            v_field = vel_field(vel_field_name,
-                                centre_x,
-                                centre_y)
-
-            # compute high resolution velocity grid
-
-            mod_velocity = v_field.compute_model_grid_fixed_100(theta_50,
-                                                                centre_x,
-                                                                centre_y)
-
-            beam_smeared_sigma = self.compute_beam_smear(mod_velocity,
-                                                         redshift,
-                                                         intrin_sigma,
-                                                         wave_array,
-                                                         sersic_n,
-                                                         centre_x,
-                                                         centre_y,
-                                                         seeing,
-                                                         pix_scale,
-                                                         psf_factor)
-
-        else:
-
-            print 'Not computing beam smear from model'
-
-            beam_smeared_sigma = self.compute_beam_smear(masked_vel_array,
-                                                         redshift,
-                                                         intrin_sigma,
-                                                         wave_array,
-                                                         sersic_n,
-                                                         centre_x,
-                                                         centre_y,
-                                                         seeing,
-                                                         pix_scale,
-                                                         psf_factor)
-
         # want to save the observed sigma, the resolution sigma,
         # the beam smeared sigma and the corrected intrinsic sigma
         # separately
 
-        intrinsic_sigma = np.sqrt((disp_array - beam_smeared_sigma)**2 -
+        intrinsic_sigma = np.sqrt((disp_array)**2 -
                                   sky_res_grid ** 2)
 
 
@@ -13260,24 +13215,6 @@ class pipelineOps(object):
         except TypeError:
 
             int_sig_min, int_sig_max = [50, 100]
-
-        beam_smeared_cut = beam_smeared_sigma[mask_x_lower:mask_x_upper,
-                                              mask_y_lower:mask_y_upper]
-
-        masked_beam_smeared_array = np.nan * np.empty(shape=(xpixs, ypixs))
-
-        for i in range(xpixs):
-
-            for j in range(ypixs):
-
-                if (i >= mask_x_lower and i < mask_x_upper) \
-                   and (j >= mask_y_lower and j < mask_y_upper):
-
-                    masked_beam_smeared_array[i][j] = beam_smeared_cut[i - mask_x_lower][j - mask_y_lower]
-
-                else:
-
-                    masked_beam_smeared_array[i][j] = masked_beam_smeared_array[i][j]
 
         sky_res_cut = sky_res_grid[mask_x_lower:mask_x_upper,
                                    mask_y_lower:mask_y_upper]
@@ -13463,10 +13400,6 @@ class pipelineOps(object):
         sig_sky_hdu = fits.PrimaryHDU(masked_sky_res_array)
 
         sig_sky_hdu.writeto('%s_sig_sky_field.fits' % incube[:-5], clobber=True)
-
-        sig_beam_hdu = fits.PrimaryHDU(masked_beam_smeared_array)
-
-        sig_beam_hdu.writeto('%s_sig_beam_field.fits' % incube[:-5], clobber=True)
 
         sig_error_hdu = fits.PrimaryHDU(masked_tot_sig_error_array)
 
@@ -15334,7 +15267,7 @@ class pipelineOps(object):
                                          psf_factor,
                                          sersic_factor,
                                          m_factor,
-                                         smear=False):
+                                         smear=True):
 
         """
         Def: Convenience method for applying MCMC to build and compute
@@ -15377,6 +15310,10 @@ class pipelineOps(object):
 
             cube = cubeOps(c_name)
 
+            xpix = cube.data.shape[1]
+
+            ypix = cube.data.shape[2]
+
             wave_array = cube.wave_array
 
             redshift = entry[1]
@@ -15408,6 +15345,22 @@ class pipelineOps(object):
             rt = entry[14]
 
             vmax = entry[15]
+
+            r_e = entry[16]
+
+            sersic_pa = entry[17]
+
+            a_r = np.sqrt((np.cos(inc) * np.cos(inc)) * (1 - (0.2**2)) + 0.2 ** 2)
+
+            sersic_field = psf.sersic_2d_astropy(dim_x=ypix,
+                                                 dim_y=xpix,
+                                                 rt=r_e,
+                                                 n=1.0,
+                                                 a_r=a_r,
+                                                 pa=sersic_pa,
+                                                 xcen=xcen,
+                                                 ycen=ycen,
+                                                 sersic_factor=50)
 
             # initiate the guess parameters for the modelling
             guess_params = [pa,
@@ -15442,6 +15395,7 @@ class pipelineOps(object):
                                           psf_factor,
                                           sersic_factor,
                                           m_factor,
+                                          sersic_field,
                                           smear)
 
             vel.plot_comparison_fixed_inc_fixed(inc,
@@ -15456,6 +15410,7 @@ class pipelineOps(object):
                                                 psf_factor,
                                                 sersic_factor,
                                                 m_factor,
+                                                sersic_field,
                                                 smear)
 
             vel.extract_in_apertures_fixed_inc_fixed(inc,
@@ -15472,6 +15427,7 @@ class pipelineOps(object):
                                                      psf_factor,
                                                      sersic_factor,
                                                      m_factor,
+                                                     sersic_field,
                                                      smear)
 
     def make_all_plots_no_image(self,
@@ -17076,6 +17032,7 @@ class pipelineOps(object):
                                                 psf_factor,
                                                 sersic_factor,
                                                 m_factor,
+                                                light_profile,
                                                 smear=False):
 
         """
@@ -17162,6 +17119,7 @@ class pipelineOps(object):
                                                             psf_factor,
                                                             sersic_factor,
                                                             m_factor,
+                                                            light_profile,
                                                             smear)
 
         # truncate this to the data size
@@ -17188,6 +17146,11 @@ class pipelineOps(object):
 
         data_sig = table_sig[0].data
 
+        # construct the light profile for the model computation
+        # assuming that the parameters computed were computed with
+        # the same sersic profile. Keep in mind that if smear is false, 
+        # these parameters won't be computed
+
         one_d_plots, extract_values = vel.extract_in_apertures_fixed_inc_fixed(inc,
                                                                              redshift,
                                                                              wave_array,
@@ -17202,6 +17165,7 @@ class pipelineOps(object):
                                                                              psf_factor,
                                                                              sersic_factor,
                                                                              m_factor,
+                                                                             light_profile,
                                                                              smear)
 
         x_max, mod_velocity_values_max, real_velocity_values_max, \
@@ -17422,6 +17386,7 @@ class pipelineOps(object):
                                        psf_factor,
                                        sersic_factor,
                                        m_factor,
+                                       light_profile,
                                        smear=False):
 
         """
@@ -17580,19 +17545,20 @@ class pipelineOps(object):
         ypix = data_vel.shape[1]
 
         data_model = vel.compute_model_grid_fixed_inc_fixed(theta_50,
-                                                           inc,
-                                                           redshift,
-                                                           wave_array,
-                                                           xcen,
-                                                           ycen,
-                                                           seeing,
-                                                           sersic_n,
-                                                           sigma,
-                                                           pix_scale,
-                                                           psf_factor,
-                                                           sersic_factor,
-                                                           m_factor,
-                                                           smear)
+                                                            inc,
+                                                            redshift,
+                                                            wave_array,
+                                                            xcen,
+                                                            ycen,
+                                                            seeing,
+                                                            sersic_n,
+                                                            sigma,
+                                                            pix_scale,
+                                                            psf_factor,
+                                                            sersic_factor,
+                                                            m_factor,
+                                                            light_profile,
+                                                            smear)
 
         # truncate this to the data size
 
@@ -17636,6 +17602,7 @@ class pipelineOps(object):
                                                                              psf_factor,
                                                                              sersic_factor,
                                                                              m_factor,
+                                                                             light_profile,
                                                                              smear)
 
         x_max, mod_velocity_values_max, real_velocity_values_max, \
@@ -17816,6 +17783,18 @@ class pipelineOps(object):
         print 'DYN: %s' % pa
 
         # extract the velocity data in each case of position angle
+
+        print d_aper
+        print r_aper
+        print hst_pa
+        print data_vel
+        print xcen
+        print ycen
+        print pix_scale
+
+        fig, ax = plt.subplots(1, 1, figsize=(10,10))
+        ax.imshow(data_vel)
+        plt.close('all')
 
         hst_pa_vel, hst_pa_x = rt_pa.extract(d_aper,
                                              r_aper,
@@ -18399,8 +18378,8 @@ class pipelineOps(object):
                          color='green')
 
         im = ax[1][2].imshow(m_data_vel,
-                          vmin=vel_min,
-                          vmax=vel_max,
+                          vmin=-30,
+                          vmax=+30,
                           interpolation='nearest',
                           cmap=cmap)
 
@@ -18958,6 +18937,7 @@ class pipelineOps(object):
         minimum_vel_error = real_error_values_50[np.nanargmin(real_velocity_values_50)]
         maximum_vel_error = real_error_values_50[np.nanargmax(real_velocity_values_50)]
 
+
         # and combine in quadrature
         data_velocity_error = 0.5 * np.sqrt(minimum_vel_error**2 + maximum_vel_error**2)
 
@@ -18966,6 +18946,7 @@ class pipelineOps(object):
         # in the actual data
         low_sigma_index, high_sigma_index = rt_pa.find_first_valid_entry(sig_values_50) 
         data_sigma_error = 0.5 * np.sqrt(sig_error_values_50[low_sigma_index]**2 + sig_error_values_50[high_sigma_index]**2)
+        mean_sigma_error = np.nanmedian(sig_error_values_50)
 
         # numerical value of sigma at the edges
         data_sigma_value = 0.5 * (sig_values_50[low_sigma_index] + sig_values_50[high_sigma_index])
@@ -18973,6 +18954,13 @@ class pipelineOps(object):
 
         b_data_velocity_value = (abs(np.nanmax(best_pa_vel)) + \
                                   abs(np.nanmin(best_pa_vel))) / 2.0
+
+        # and for the rotated position angle errors
+        min_v_error_rpa = best_pa_error[np.nanargmin(best_pa_vel)]
+        max_v_error_rpa = best_pa_error[np.nanargmax(best_pa_vel)]
+
+        # and combine in quadrature
+        rt_pa_observed_velocity_error = 0.5 * np.sqrt(min_v_error_rpa**2 + min_v_error_rpa**2)
 
         h_data_velocity_value = (abs(np.nanmax(hst_pa_vel)) + \
                                   abs(np.nanmin(hst_pa_vel))) / 2.0
@@ -18995,9 +18983,13 @@ class pipelineOps(object):
 
         ex_r_18_idx = np.argmin(abs(1.8*r_e_arc - extended_r))
 
+        ex_3Rd_idx = np.argmin(abs(5.04*r_e_arc - extended_r))
+
         ex_r_9_idx = np.argmin(abs(arc_num_r_9 - extended_r))
 
         x_50_r_18_idx = np.argmin(abs(1.8*r_e_arc - x_50))
+
+        x_50_3Rd_idx = np.argmin(abs(5.04*r_e_arc - x_50))
 
         x_50_r_9_idx = np.argmin(abs(arc_num_r_9 - x_50))
 
@@ -19022,9 +19014,13 @@ class pipelineOps(object):
 
         dyn_v18 = d_extrapolation[ex_r_18_idx] - dyn_constant
 
+        dyn_v3Rd = d_extrapolation[ex_3Rd_idx] - dyn_constant
+
         dyn_v9 = d_extrapolation[ex_r_9_idx] - dyn_constant
 
         b_v18 = b_extrapolation[ex_r_18_idx] - rot_constant
+
+        b_v3Rd = b_extrapolation[ex_3Rd_idx] - rot_constant
 
         b_v9 = b_extrapolation[ex_r_9_idx] - rot_constant
 
@@ -19032,7 +19028,9 @@ class pipelineOps(object):
 
         h_v9 = h_extrapolation[ex_r_18_idx] - hst_constant
 
-        v_2d_r18 = mod_velocity_values_50[x_50_r_18_idx] 
+        v_2d_r18 = mod_velocity_values_50[x_50_r_18_idx]
+
+        v_2d_3Rd = mod_velocity_values_50[x_50_3Rd_idx]
 
         v_2d_r9 = mod_velocity_values_50[x_50_r_9_idx]
 
@@ -19054,9 +19052,9 @@ class pipelineOps(object):
         # assume for now that q = 0.15
         q = 0.2
 
-        inclination_galfit = np.sqrt(np.arccos((axis_r**2 - q**2)/(1 - q**2)))
+        inclination_galfit = np.arccos(np.sqrt((axis_r**2 - q**2)/(1 - q**2)))
 
-        inclination_num = np.sqrt(np.arccos((num_axis_ratio**2 - q**2)/(1 - q**2)))
+        inclination_num = np.arccos(np.sqrt((num_axis_ratio**2 - q**2)/(1 - q**2)))
 
         data_values = [gal_name[26:-5],
                        r_e,
@@ -19130,10 +19128,29 @@ class pipelineOps(object):
         print 'CONSTANTS: %s %s %s' % (dyn_constant, rot_constant, hst_constant)
         print 'OBSERVED_VELOCITY_DYNAMIC_PA: %s' % abs(data_velocity_value / np.sin(inclination_galfit))
         print 'OBSERVED_VEL_ERROR_DYNAMIC_PA: %s' % data_velocity_error
+        print 'OBSERVED_VELOCITY_ROTATED_PA: %s' % abs(b_data_velocity_value / np.sin(inclination_galfit))
+        print 'OBSERVED_VELOCITY_ROTATED_PA_ERROR: %s' % rt_pa_observed_velocity_error
+        print 'MEAN SIGMA ERROR: %s' % mean_sigma_error
         print 'OBSERVED_SIGMA_DYNAMIC_PA: %s' % data_sigma_value
         print 'OBSERVED_SIGMA_ERROR: %s' % data_sigma_error
-        print '1D_ALONG_ROTATED_PA: %s' % abs(b_v18 / np.sin(inclination_galfit))
-        print '2D_ALONG_DYN_PA: %s' % abs(v_2d_r18 / np.sin(inclination_galfit))
+        print '1D_ALONG_DYN_PA_1.8: %s' % abs(dyn_v18 / np.sin(inclination_galfit))
+        print '1D_ALONG_DYN_PA_3Rd: %s' % abs(dyn_v3Rd / np.sin(inclination_galfit))
+        print '1D_ALONG_ROTATED_PA_1.8: %s' % abs(b_v18 / np.sin(inclination_galfit))
+        print '1D_ALONG_ROTATED_PA_3Rd: %s' % abs(b_v3Rd / np.sin(inclination_galfit))
+        print '2D_ALONG_DYN_PA_1.8: %s' % abs(v_2d_r18 / np.sin(inclination_galfit))
+        print '2D_ALONG_DYN_PA_3Rd: %s' % abs(v_2d_3Rd / np.sin(inclination_galfit))
+        print 'AXIS RATIO: %s' % axis_r
+        print 'GALFIT INCLINATION %s' % inclination_galfit
+        print 'HST_PA: %s' % hst_pa
+        if pa > np.pi:
+            pa = pa - np.pi
+        print 'DYN_PA: %s' % pa
+        if best_pa > np.pi:
+            best_pa = best_pa - np.pi
+        print 'BEST_PA: %s' % best_pa
+        print 'EFFECTIVE RADIUS: %s' % r_e_arc
+        print 'EFFECTIVE RADIUS Kpcs %s' % r_e
+        print 'Rd/RPSF: %s' % (r_e_arc * 6.72)
 
         plt.show()
 
@@ -19241,6 +19258,10 @@ class pipelineOps(object):
 
             cube = cubeOps(obj_name)
 
+            xpix = cube.data.shape[1]
+
+            ypix = cube.data.shape[2]
+
             wave_array = cube.wave_array
 
             redshift = entry[1]
@@ -19250,6 +19271,22 @@ class pipelineOps(object):
             ycen = entry[11]
 
             inc = entry[12]
+
+            r_e = entry[16]
+
+            sersic_pa = entry[17]
+
+            a_r = np.sqrt((np.cos(inc) * np.cos(inc)) * (1 - (0.2**2)) + 0.2 ** 2)
+
+            sersic_field = psf.sersic_2d_astropy(dim_x=ypix,
+                                                 dim_y=xpix,
+                                                 rt=r_e,
+                                                 n=1.0,
+                                                 a_r=a_r,
+                                                 pa=sersic_pa,
+                                                 xcen=xcen,
+                                                 ycen=ycen,
+                                                 sersic_factor=50)
 
             big_list.append(self.make_all_plots_fixed_inc_fixed(inc,
                                                                 redshift,
@@ -19266,6 +19303,7 @@ class pipelineOps(object):
                                                                 psf_factor,
                                                                 sersic_factor,
                                                                 m_factor,
+                                                                sersic_field,
                                                                 smear))
         
         # create the table
@@ -19298,6 +19336,10 @@ class pipelineOps(object):
 
             cube = cubeOps(obj_name)
 
+            xpix = cube.data.shape[1]
+
+            ypix = cube.data.shape[2]
+
             wave_array = cube.wave_array
 
             redshift = entry[1]
@@ -19307,6 +19349,22 @@ class pipelineOps(object):
             ycen = entry[11]
 
             inc = entry[12]
+
+            r_e = entry[16]
+
+            sersic_pa = entry[17]
+
+            a_r = np.sqrt((np.cos(inc) * np.cos(inc)) * (1 - (0.2**2)) + 0.2 ** 2)
+
+            sersic_field = psf.sersic_2d_astropy(dim_x=ypix,
+                                                 dim_y=xpix,
+                                                 rt=r_e,
+                                                 n=1.0,
+                                                 a_r=a_r,
+                                                 pa=sersic_pa,
+                                                 xcen=xcen,
+                                                 ycen=ycen,
+                                                 sersic_factor=50)
 
             self.make_all_plots_no_image_fixed_inc_fixed(inc,
                                                          redshift,
@@ -19323,6 +19381,7 @@ class pipelineOps(object):
                                                          psf_factor,
                                                          sersic_factor,
                                                          m_factor,
+                                                         sersic_field,
                                                          smear)
 
     # experiment with modelling seeing conditions

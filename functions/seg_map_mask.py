@@ -58,9 +58,9 @@ def create_galfit_mask(obj_number,
     # loop through and change all entries which aren't 0 or equal to
     # the object number
 
-    for i in range(0, len(data[0])):
+    for i in range(0, data.shape[0]):
 
-        for j in range(0, len(data[1])):
+        for j in range(0, data.shape[1]):
 
             if data[i,j] == 0:
 
@@ -82,5 +82,5 @@ def create_galfit_mask(obj_number,
 
     seg_hdu.writeto(new_seg_name, clobber=True)
 
-create_galfit_mask(1, '/scratch2/oturner/disk1/turner/DATA/Sextractor/SSA_F160W/m38_seg.fits')
+create_galfit_mask(2, '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/sextractor/c10_seg.fits')
 

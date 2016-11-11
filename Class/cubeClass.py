@@ -1080,24 +1080,30 @@ class cubeOps(object):
         data_masked_cut[isnan(data_masked_cut)] = list_of_moments[0]
 
         # fit the model
-        popt, pcov = opt.curve_fit(self.twoD_Gaussian,
-                                   (x, y),
-                                   data_masked_cut.ravel(),
-                                   p0=list_of_moments,
-                                   bounds=([-np.inf,
-                                            0,
-                                            0,
-                                            0,
-                                            0,
-                                            0,
-                                            -np.pi/2.0],
-                                            [np.inf,
-                                             np.inf,
-                                             data_masked_cut.shape[1],
-                                             data_masked_cut.shape[0],
-                                             data_masked_cut.shape[1],
-                                             data_masked_cut.shape[0],
-                                             np.pi/2.0]))
+
+        try:
+            popt, pcov = opt.curve_fit(self.twoD_Gaussian,
+                                       (x, y),
+                                       data_masked_cut.ravel(),
+                                       p0=list_of_moments,
+                                       bounds=([-np.inf,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                -np.pi/2.0],
+                                                [np.inf,
+                                                 np.inf,
+                                                 data_masked_cut.shape[1],
+                                                 data_masked_cut.shape[0],
+                                                 data_masked_cut.shape[1],
+                                                 data_masked_cut.shape[0],
+                                                 np.pi/2.0]))
+        except RuntimeError:
+            # maximum number of evlauations reached with solution
+            # set bogus parameters because the fit is terrible
+            popt = [0, 1, 8, 8, 5, 5, 0]
 
         # alter the gaussian centroid positions by the number of
         # cut pixels at the beginning

@@ -60,7 +60,7 @@ param_names = ['Gal_name',
                'Rt',
                'Vmax']
 
-param_file = '/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/ssa_grid_method_parameters_fixed.txt'
+param_file = '/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/goods_grid_method_parameters_fixed.txt'
 
 if os.path.isfile(param_file):
 
@@ -75,7 +75,7 @@ with open(param_file, 'w') as f:
         f.write('%s\t' % item)
 
     # read in the table of cube names
-    Table = ascii.read('/scratch2/oturner/disk1/turner/DATA/ssa_isolated_rotators_names.txt')
+    Table = ascii.read('/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt')
 
     # assign variables to the different items in the infile
     for entry in Table:

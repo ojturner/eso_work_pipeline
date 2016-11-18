@@ -99,13 +99,13 @@ guess_params_fixed_inc_fixed = [1.01829519442,   0.5,  116]
 
 v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/'
                      + 'uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstru'
-                     + 'cted_bs016759_vel_field.fits',20.733, 19.211)
+                     + 'cted_bs016759_vel_field.fits',10.38  , 16.64)
 dim_x = v_field.xpix
 dim_y = v_field.ypix
 
 sersic_field = psf.sersic_2d_astropy(dim_x=dim_y,
                                      dim_y=dim_x,
-                                     rt=1.96,
+                                     rt=2.00,
                                      n=1.0,
                                      a_r=0.6528,
                                      pa=0.86,
@@ -148,7 +148,7 @@ for i in range(flux_field.shape[0]):
 #                                  burn_no=50,
 #                                  seeing=0.5,
 #                                  sersic_n=1,
-#                                  sigma=50,
+#                                  sigma=40,
 #                                  pix_scale=0.1,
 #                                  psf_factor=1,
 #                                  sersic_factor=1,
@@ -181,20 +181,20 @@ for i in range(flux_field.shape[0]):
 
 # APPLYING MODEL MCMC # 
 
-#pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt',
-#                                              nwalkers=200,
-#                                              nsteps=500,
-#                                              burn_no=50,
-#                                              r_aper=0.8,
-#                                              d_aper=0.6,
-#                                              seeing=0.5,
-#                                              sersic_n=1.0,
-#                                              sigma=50,
-#                                              pix_scale=0.1,
-#                                              psf_factor=4,
-#                                              sersic_factor=4,
-#                                              m_factor=4,
-#                                              smear=True)
+pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/ssa_isolated_rotators_names.txt',
+                                              nwalkers=100,
+                                              nsteps=200,
+                                              burn_no=20,
+                                              r_aper=0.8,
+                                              d_aper=0.6,
+                                              seeing=0.6,
+                                              sersic_n=1.0,
+                                              sigma=50,
+                                              pix_scale=0.1,
+                                              psf_factor=4,
+                                              sersic_factor=50,
+                                              m_factor=4,
+                                              smear=True)
 
 # APPLYING VELOCITY FIELD COMPUTATION # 
 
@@ -212,17 +212,36 @@ for i in range(flux_field.shape[0]):
 
 # CREATING THE PLOT GRIDS # 
 
-pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
-                                                  r_aper=0.8,
-                                                  d_aper=0.6,
-                                                  seeing=0.60,
-                                                  sersic_n=2.0,
-                                                  sigma=60,
-                                                  pix_scale=0.1,
-                                                  psf_factor=1.0,
-                                                  sersic_factor=50.0,
-                                                  m_factor=4.0,
-                                                  smear=True)
+#pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
+#                                                  r_aper=0.4,
+#                                                  d_aper=0.2,
+#                                                  seeing=0.60,
+#                                                  sersic_n=2.0,
+#                                                  sigma=60,
+#                                                  pix_scale=0.1,
+#                                                  psf_factor=1.0,
+#                                                  sersic_factor=50.0,
+#                                                  m_factor=4.0,
+#                                                  smear=True)
+
+# PLOTTING THE COMPARISONS IN MCMC (WITH INCLINATION UNCERTAINTY INCLUDED #
+
+#v_field.extract_in_apertures_fixed_inc_fixed(inc=0.8832,
+#                                        redshift=3.60175699681,
+#                                        wave_array=wave_array,
+#                                        xcen=10.38,
+#                                        ycen=16.64,
+#                                        r_aper=0.8,
+#                                        d_aper=0.6,
+#                                        seeing=0.5,
+#                                        sersic_n=1.0,
+#                                        sigma=50,
+#                                        pix_scale=0.1,
+#                                        psf_factor=1.0,
+#                                        sersic_factor=50,
+#                                        m_factor=4,
+#                                        light_profile=sersic_field,
+#                                        smear=True)
 
 # V OVER SIGMA # 
 
@@ -289,7 +308,7 @@ pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk
 #pipe_methods.make_all_plots_no_image('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-md25.fits')
 #pipe_methods.make_all_plots('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208.fits')
 #v_field.run_emcee_fixed(guess_params_fixed, 23.0536, 19.0002, 200, 1000, 100)
-#v_field.plot_comparison_fixed(24.4515843627, 17.7671445415)
+
 #v_field.extract_in_apertures_fixed_inc_fixed(24.4515843627, 17.7671445415, 1.12, 0.8, 0.6)
 #v_field.v_over_sigma('fixed_vary', 'mean', 0.8, 0.6, 1.12, 24.4515843627, 17.7671445415)
 #f = v_field.fitness(guess_params)

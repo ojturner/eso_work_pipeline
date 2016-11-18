@@ -18378,8 +18378,8 @@ class pipelineOps(object):
                          color='green')
 
         im = ax[1][2].imshow(m_data_vel,
-                          vmin=-30,
-                          vmax=+30,
+                          vmin=vel_min,
+                          vmax=vel_max,
                           interpolation='nearest',
                           cmap=cmap)
 

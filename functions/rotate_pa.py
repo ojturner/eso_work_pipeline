@@ -210,6 +210,16 @@ def extract(d_aper,
 
     real_velocity_values = real_phot_table['aperture_sum'].data / pixel_area
 
+#    print 'RT PA REAL VELOCITY VALUES: %s' % real_velocity_values
+#    print 'RT PA X: %s' % x
+#    print 'POSITIONS: %s' % positions
+#    print 'xcen and ycen: %s %s' % (xcen, ycen)
+#    fig, ax = plt.subplots(1, 1, figsize=(10,10))
+#    ax.imshow(v_field, interpolation='nearest')
+#    apertures.plot(ax=ax)
+#    plt.show()
+#    plt.close('all')
+
 #    fig, ax = plt.subplots(1, 1, figsize=(12, 6))
 #    ax.scatter(x,
 #            real_velocity_values,

@@ -4131,7 +4131,7 @@ class vel_field(object):
 
         # first set up the parameter grids 
 
-        vel_grid = np.arange(20, 150, 1.0)
+        vel_grid = np.arange(20, 175, 1.0)
 
         rt_grid = np.arange(0.1, 2, 0.1)
 

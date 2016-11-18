@@ -14,6 +14,7 @@ import pyraf
 import numpy.ma as ma
 import pickle
 import scipy.ndimage.filters as scifilt
+import scipy.ndimage as nd
 from scipy.optimize import curve_fit
 from scipy.spatial import distance
 from scipy import ndimage
@@ -559,7 +560,7 @@ def cube_blur(vel_data,
 #    rc('font', weight='bold')
 #    rc('text', usetex=True)
 #    rc('axes', linewidth=2)
-#    vel_field_8543 = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208_vel_field.fits')[0].data
+#    vel_field_8543 = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_bs016759_vel_field.fits')[0].data
 #    data_vels, data_x = rt_pa.extract(0.4, 0.6, pa, vel_field_8543, xcen, ycen, pix_scale)
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(vel_data,
@@ -770,7 +771,7 @@ def cube_blur(vel_data,
 #                                                                                                             sersic_factor))
 #    plt.close('all')
 #    # Final comparison of the correction to the velocity dispersion
-#    sigma_data = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208_sig_field.fits')[0].data
+#    sigma_data = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_bs016759_sig_field.fits')[0].data
 #    sigma_intrinsic = sigma_data - shifted_sigma
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(sigma_intrinsic,
@@ -1036,14 +1037,11 @@ def bin_by_factor(data,
            res_factor - make it an integer
            data - the data for binning
     """
-
     res_factor = float(res_factor)
     # define the x dimension of the data
     x_dim = data.shape[0] / res_factor
     y_dim = data.shape[1] / res_factor
-
     data_view = data.reshape(x_dim, res_factor, y_dim, res_factor)
-
     final_data = data_view.mean(axis=3).mean(axis=1)
 
     return final_data

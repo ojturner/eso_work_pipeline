@@ -333,9 +333,47 @@ def save_to_directory(gal_name,
 
     # that should be it
 
+def resize_ssa_iband(stamp):
 
+    image_data = fits.open(stamp)[1].data
 
-save_to_directory('c10', 2, 's_sa22b-c10_left')
-#extract_stamp('c10', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_5_rotated.fits', 334.356291667  , 0.1164027778 , 5.0)
+    ## galfit plotting
+
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+
+    ax.imshow(image_data, vmin=0, vmax=5)
+
+    ax.minorticks_on()
+
+    ax.grid(b=True, which='major', color='b', linestyle='-')
+
+    ax.grid(b=True, which='minor', color='r', linestyle='--')
+
+    plt.show()
+
+    plt.close('all')
+
+    center_x = int(raw_input('Center_vertical: '))
+    center_y = int(raw_input('Center_horizontal: '))
+
+    table = fits.open(stamp, mode='update')
+
+    table[1].data = table[1].data[center_x-35:center_x+35,
+                                  center_y-35:center_y+35]
+
+    table[2].data = table[2].data[center_x-35:center_x+35,
+                                  center_y-35:center_y+35]
+
+    table[3].data = table[3].data[center_x-35:center_x+35,
+                                  center_y-35:center_y+35]
+
+    table.flush()
+
+    table.close()                   
+
+resize_ssa_iband('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-c20_galfit.fits')
+#save_to_directory('c35', 1, 's_sa22a-c35')
+#extract_stamp('n3_006', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_7_rotated.fits', 334.353579167 , 0.188227777 , 3.0)
 #rotate_outputs('nc47')
 #rotate_field('/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_3.fits', 1, 2)
+

@@ -43,7 +43,8 @@ import rotate_pa as rt_pa
 
 def table_create(column_names,
                  data_values,
-                 save_dir):
+                 save_dir,
+                 file_id):
 
     """
     Def:
@@ -64,9 +65,9 @@ def table_create(column_names,
                     line of this function definition
     """
 
-    # build the save file name
-    file_name = save_dir + 'dynamical_mass.cat'
+    file_name = save_dir + file_id
 
+    # build the save file name
     if os.path.isfile(file_name):
 
         os.system('rm %s' % file_name)

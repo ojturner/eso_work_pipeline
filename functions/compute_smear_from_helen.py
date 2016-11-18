@@ -68,8 +68,55 @@ def compute_velocity_smear_from_ratio(ratio_r_psf,
     corr_factor_1 = curve_1[corr_indx]
     corr_factor_2 = curve_2[corr_indx]
 
+    print 'VELOCITY CORRECTION AT 2.2: %s' %  (velocity_3rd / corr_factor_2)
+
+    return velocity_3rd / corr_factor_2
+
+def compute_velocity_smear_from_ratio_3(ratio_r_psf,
+                                        velocity_3rd):
+    
+    # given the ratio of the size of the PSF to the
+    # disk radius of the galaxy, compute the correction
+    # factor for the velocity (at 3Rd, whether that is important or not)
+    # analytic function for correction comes from H.Johnson
+
+    r = np.arange(0,5.0, 0.001)
+
+    # parameter values
+    a_1 = 1.0
+    b_1 = 0.18
+    c_1 = 1.48
+    d_1 = 1.0
+
+    a_2 = 1.0
+    b_2 = 0.18
+    c_2 = 1.26
+    d_2 = 0.88
+
+    curve_1 = []
+
+    curve_2 = []
+
+    for entry in r:
+
+        func = a_1 - (b_1 * np.exp(-c_1 * entry**d_1))
+
+        curve_1.append(func)
+
+    for entry in r:
+
+        func = a_2 - (b_2 * np.exp(-c_2 * entry**d_2))
+
+        curve_2.append(func)
+
+    corr_indx = np.argmin(abs(ratio_r_psf - r))
+    corr_factor_1 = curve_1[corr_indx]
+    corr_factor_2 = curve_2[corr_indx]
+
     print 'VELOCITY CORRECTION AT 3.0: %s ' % (velocity_3rd / corr_factor_1)
     print 'VELOCITY CORRECTION AT 2.2: %s' %  (velocity_3rd / corr_factor_2)
+
+    return velocity_3rd / corr_factor_1
 
 
 
@@ -130,6 +177,8 @@ def compute_mean_sigma_smear_from_ratio(ratio_r_psf,
     print 'SIGMA MEAN CORRECTION FACTOR: %s' % corr_factor
     print 'SIGMA MEAN CORRECTED: %s' % (sigma_mean / corr_factor)
 
+    return sigma_mean / corr_factor
+
 #    fig, ax = plt.subplots(1, 1, figsize=(10,10))
 #    ax.plot(r, curve)
 #    plt.show()
@@ -186,6 +235,8 @@ def compute_outer_sigma_smear_from_ratio(ratio_r_psf,
     print 'SIGMA EDGES CORRECTION FACTOR: %s' % corr_factor
     print 'SIGMA EDGES CORRECTED: %s' % (sigma_outer / corr_factor)
 
+    return sigma_outer / corr_factor
+
 #    fig, ax = plt.subplots(1, 1, figsize=(10,10))
 #    ax.plot(r, curve)
 #    plt.show()
@@ -193,6 +244,6 @@ def compute_outer_sigma_smear_from_ratio(ratio_r_psf,
 
 # note the velocity used is the 1d extrapolation to 3Rd
 # along the dynamic position angle
-compute_velocity_smear_from_ratio(1.83, 53.8)
-compute_outer_sigma_smear_from_ratio(1.83, 85.98, 3)
-compute_mean_sigma_smear_from_ratio(1.83, 116.65 , 3)
+#compute_velocity_smear_from_ratio(0.83, 53.8)
+#compute_outer_sigma_smear_from_ratio(1.83, 85.98, 3)
+#compute_mean_sigma_smear_from_ratio(1.83, 116.65 , 3)

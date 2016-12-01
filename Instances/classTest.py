@@ -76,8 +76,8 @@ wave_array = cube.wave_array
 #hobjframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:05:24.218_Corrected_11_spline3_Shifted.fits'
 #hskyframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:03:33.904.fits'
 
-combine_input = '/scratch2/oturner/disk2/turner/DATA/KLENS_C2/combined_h_telluric/all_nights.txt'
-sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS_C2/combined_h_telluric'
+combine_input = '/scratch2/oturner/disk2/turner/DATA/KLENS_C4/combined_h_telluric/all_nights.txt'
+sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS_C4/combined_h_telluric/'
 #infile = '/scratch2/oturner/disk1/turner/DATA/all_names_new.txt'
 #combNames = '/scratch2/oturner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/Instances/gals_names.txt'
 #obj_names = '/scratch2/oturner/disk1/turner/DATA/NGC55/YJ/Calibrations/shifted_object_names.txt'
@@ -181,26 +181,26 @@ for i in range(flux_field.shape[0]):
 
 # APPLYING MODEL MCMC # 
 
-pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/ssa_isolated_rotators_names.txt',
-                                              nwalkers=100,
-                                              nsteps=200,
-                                              burn_no=20,
-                                              r_aper=0.8,
-                                              d_aper=0.6,
-                                              seeing=0.6,
-                                              sersic_n=1.0,
-                                              sigma=50,
-                                              pix_scale=0.1,
-                                              psf_factor=4,
-                                              sersic_factor=50,
-                                              m_factor=4,
-                                              smear=True)
+#pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt',
+#                                              nwalkers=100,
+#                                              nsteps=200,
+#                                              burn_no=20,
+#                                              r_aper=0.8,
+#                                              d_aper=0.6,
+#                                              seeing=0.6,
+#                                              sersic_n=1.0,
+#                                              sigma=50,
+#                                              pix_scale=0.1,
+#                                              psf_factor=4,
+#                                              sersic_factor=50,
+#                                              m_factor=4,
+#                                              smear=True)
 
 # APPLYING VELOCITY FIELD COMPUTATION # 
 
 #pipe_methods.multi_vel_field_stott('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
 #                                   'oiii',
-#                                    3.0,
+#                                    5.0,
 #                                    g_c_min=0.5,
 #                                    g_c_max=1.5,
 #                                    seeing=0.6,
@@ -212,7 +212,7 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 
 # CREATING THE PLOT GRIDS # 
 
-#pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
+#pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk1/turner/DATA/ssa_isolated_rotator_names.txt',
 #                                                  r_aper=0.4,
 #                                                  d_aper=0.2,
 #                                                  seeing=0.60,
@@ -255,7 +255,7 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 
 #pipe_methods.combine_by_name(sci_dir, combine_input, 0.25, 0.8, 10)
 
-#pipe_methods.combine_by_name(sci_dir, combine_input, 0.00001, 100, 5E-17, star=False)
+pipe_methods.combine_by_name(sci_dir, combine_input, 0.00001, 100, 5E-17, star=False)
 
 # PLOT PROPERTIES # 
 

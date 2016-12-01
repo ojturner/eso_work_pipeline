@@ -40,7 +40,11 @@ import psf_blurring as psf
 import twod_gaussian as g2d
 import rotate_pa as rt_pa
 
-def find_aperture_parameters(stamp):
+def find_aperture_parameters(stamp,
+                             x_low,
+                             x_high,
+                             y_low,
+                             y_high):
 
     """
     Def:
@@ -64,20 +68,12 @@ def find_aperture_parameters(stamp):
 
     ax.grid(b=True, which='minor', color='r', linestyle='--')
 
-    plt.show()
+    # plt.show()
 
     plt.close('all')
 
     # play the same game as in the reshape script with accepting
     # raw input for the pixel boundaries for gaussian fitting
-
-    x_low = int(raw_input('Vertical Lower Limit: '))
-
-    x_high = int(raw_input('Vertical Upper Limit: '))
-
-    y_low = int(raw_input('Horizontal Lower Limit: '))
-
-    y_high = int(raw_input('Horizontal Upper Limit: '))
 
     cut_data = image_data[x_low:x_high, y_low:y_high]
 

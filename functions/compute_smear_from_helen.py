@@ -68,6 +68,8 @@ def compute_velocity_smear_from_ratio(ratio_r_psf,
     corr_factor_1 = curve_1[corr_indx]
     corr_factor_2 = curve_2[corr_indx]
 
+    print corr_factor_1, corr_factor_2
+
     print 'VELOCITY CORRECTION AT 2.2: %s' %  (velocity_3rd / corr_factor_2)
 
     return velocity_3rd / corr_factor_2
@@ -114,7 +116,6 @@ def compute_velocity_smear_from_ratio_3(ratio_r_psf,
     corr_factor_2 = curve_2[corr_indx]
 
     print 'VELOCITY CORRECTION AT 3.0: %s ' % (velocity_3rd / corr_factor_1)
-    print 'VELOCITY CORRECTION AT 2.2: %s' %  (velocity_3rd / corr_factor_2)
 
     return velocity_3rd / corr_factor_1
 
@@ -232,8 +233,8 @@ def compute_outer_sigma_smear_from_ratio(ratio_r_psf,
     corr_indx = np.argmin(abs(ratio_r_psf - r))
     corr_factor = curve[corr_indx]
 
-    print 'SIGMA EDGES CORRECTION FACTOR: %s' % corr_factor
-    print 'SIGMA EDGES CORRECTED: %s' % (sigma_outer / corr_factor)
+#    print 'SIGMA EDGES CORRECTION FACTOR: %s' % corr_factor
+#    print 'SIGMA EDGES CORRECTED: %s' % (sigma_outer / corr_factor)
 
     return sigma_outer / corr_factor
 
@@ -244,6 +245,6 @@ def compute_outer_sigma_smear_from_ratio(ratio_r_psf,
 
 # note the velocity used is the 1d extrapolation to 3Rd
 # along the dynamic position angle
-#compute_velocity_smear_from_ratio(0.83, 53.8)
+#compute_velocity_smear_from_ratio(0.2, 53.8)
 #compute_outer_sigma_smear_from_ratio(1.83, 85.98, 3)
 #compute_mean_sigma_smear_from_ratio(1.83, 116.65 , 3)

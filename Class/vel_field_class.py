@@ -4056,7 +4056,7 @@ class vel_field(object):
         pa, rt, vasym = theta
 
         if 0 < pa < 2 * np.pi and \
-           0.005 < rt < 2.0 and \
+           0.01 < rt < 2.0 and \
            0 < vasym < 250:
 
             return 0.0
@@ -4131,7 +4131,7 @@ class vel_field(object):
 
         # first set up the parameter grids 
 
-        vel_grid = np.arange(20, 175, 1.0)
+        vel_grid = np.arange(20, 150, 1.0)
 
         rt_grid = np.arange(0.1, 2, 0.1)
 

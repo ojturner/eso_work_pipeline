@@ -292,8 +292,8 @@ def save_to_directory(gal_name,
 
     galaxy_short = gal_name + '_output.fits'
 
-    galaxy = '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/galfit_output/' + gal_name + '_output.fits'
-    galaxy_rms = '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/rms_maps/' + gal_name + '_rms.fits'
+    galaxy = '/scratch2/oturner/disk1/turner/DATA/Victoria_galfit/KMOS/images_stamps/' + gal_name + '_output.fits'
+    galaxy_rms = '/scratch2/oturner/disk1/turner/DATA/Victoria_galfit/KMOS/images_stamps/106441_sigmastamp.fits'
 
     # open up the first 
     table = fits.open(galaxy, mode='update')
@@ -314,11 +314,11 @@ def save_to_directory(gal_name,
 
     if pointing == 1:
 
-        destination_dir = '/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/'
+        destination_dir = '/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/'
 
     if pointing == 2:
 
-        destination_dir = '/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/'
+        destination_dir = '/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/goods_p2_0.8_10_better/Science/'
 
     # copy to new directory 
     copy_name = destination_dir + galaxy_short
@@ -371,9 +371,9 @@ def resize_ssa_iband(stamp):
 
     table.close()                   
 
-resize_ssa_iband('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-c20_galfit.fits')
-#save_to_directory('c35', 1, 's_sa22a-c35')
-#extract_stamp('n3_006', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_7_rotated.fits', 334.353579167 , 0.188227777 , 3.0)
+#resize_ssa_iband('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-c20_galfit.fits')
+#save_to_directory('lbg_111', 2, 'cdfs_lbg_111')
+extract_stamp('lab25', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_9_rotated.fits', 334.344179166 ,  0.264258333 , 3.0)
 #rotate_outputs('nc47')
 #rotate_field('/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_3.fits', 1, 2)
 

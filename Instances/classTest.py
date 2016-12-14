@@ -95,22 +95,20 @@ sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS_C4/combined_h_telluric/'
 
 guess_params = [18.4515843627, 17.7671445415, 1.10786694516, 5.76470601635, 1.09264956556, 165.2541589594]
 guess_params_fixed = [1.04999129056,  5.80554889021,   0.106855839229,  65.2463520223]
-guess_params_fixed_inc_fixed = [1.01829519442,   0.5,  116]
+guess_params_fixed_inc_fixed = [3.82,  1.9, 46.0]
 
-v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/'
-                     + 'uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstru'
-                     + 'cted_bs016759_vel_field.fits',10.38  , 16.64)
+v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_vel_field.fits',10.38  , 16.64)
 dim_x = v_field.xpix
 dim_y = v_field.ypix
 
 sersic_field = psf.sersic_2d_astropy(dim_x=dim_y,
                                      dim_y=dim_x,
-                                     rt=2.00,
+                                     rt=2.2,
                                      n=1.0,
-                                     a_r=0.6528,
-                                     pa=0.86,
-                                     xcen=10.38,
-                                     ycen= 16.64,
+                                     a_r=0.76,
+                                     pa=0.50,
+                                     xcen=12.67,
+                                     ycen= 22.64,
                                      sersic_factor=50)
 
 #fig, ax = plt.subplots(1, 1, figsize=(10, 10))
@@ -119,9 +117,7 @@ sersic_field = psf.sersic_2d_astropy(dim_x=dim_y,
 #plt.close('all')
 
 # COMPUTE THE BEAM SMEAR #
-flux_field = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/'
-                     + 'uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstru'
-                     + 'cted_bs016759_flux_field.fits')[0].data
+flux_field = fits.open('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_flux_field.fits')[0].data
 for i in range(flux_field.shape[0]):
     for j in range(flux_field.shape[1]):
         if np.isnan(flux_field[i,j]):
@@ -138,15 +134,15 @@ for i in range(flux_field.shape[0]):
 # RUN EMCEE FIXED INC FIXED EXPERIMENT
 
 #v_field.run_emcee_fixed_inc_fixed(guess_params_fixed_inc_fixed,
-#                                  inc=0.8838,
-#                                  redshift=3.60175699681,
+#                                  inc=0.97,
+#                                  redshift=3.067791,
 #                                  wave_array=wave_array,
-#                                  xcen=10.38  ,
-#                                  ycen=16.64 ,
+#                                  xcen=12.67  ,
+#                                  ycen= 22.64 ,
 #                                  nsteps=200,
 #                                  nwalkers=500,
 #                                  burn_no=50,
-#                                  seeing=0.5,
+#                                  seeing=0.6,
 #                                  sersic_n=1,
 #                                  sigma=40,
 #                                  pix_scale=0.1,
@@ -181,26 +177,26 @@ for i in range(flux_field.shape[0]):
 
 # APPLYING MODEL MCMC # 
 
-#pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt',
-#                                              nwalkers=100,
-#                                              nsteps=200,
-#                                              burn_no=20,
-#                                              r_aper=0.8,
-#                                              d_aper=0.6,
-#                                              seeing=0.6,
-#                                              sersic_n=1.0,
-#                                              sigma=50,
-#                                              pix_scale=0.1,
-#                                              psf_factor=4,
-#                                              sersic_factor=50,
-#                                              m_factor=4,
-#                                              smear=True)
+pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/ssa_mergers_names.txt',
+                                              nwalkers=100,
+                                              nsteps=200,
+                                              burn_no=20,
+                                              r_aper=0.8,
+                                              d_aper=0.6,
+                                              seeing=0.6,
+                                              sersic_n=1.0,
+                                              sigma=50,
+                                              pix_scale=0.1,
+                                              psf_factor=4,
+                                              sersic_factor=50,
+                                              m_factor=4,
+                                              smear=True)
 
 # APPLYING VELOCITY FIELD COMPUTATION # 
 
 #pipe_methods.multi_vel_field_stott('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
 #                                   'oiii',
-#                                    5.0,
+#                                    3.0,
 #                                    g_c_min=0.5,
 #                                    g_c_max=1.5,
 #                                    seeing=0.6,
@@ -255,7 +251,7 @@ for i in range(flux_field.shape[0]):
 
 #pipe_methods.combine_by_name(sci_dir, combine_input, 0.25, 0.8, 10)
 
-pipe_methods.combine_by_name(sci_dir, combine_input, 0.00001, 100, 5E-17, star=False)
+#pipe_methods.combine_by_name(sci_dir, combine_input, 0.00001, 100, 5E-17, star=False)
 
 # PLOT PROPERTIES # 
 

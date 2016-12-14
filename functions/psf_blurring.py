@@ -553,14 +553,14 @@ def cube_blur(vel_data,
 
     shifted_velocities = ((shifted_velocities - central_l) / central_l) * c
     shifted_sigma = (((shifted_sigma) / central_l) * c) - sigma
-    # just doing some tests now. 
-    # for 8543 - can we actually reproduce the observed velocity field with
-    # the beam smearing? Load that in and check.
+#    # just doing some tests now. 
+#    # for 8543 - can we actually reproduce the observed velocity field with
+#    # the beam smearing? Load that in and check.
 #    rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 #    rc('font', weight='bold')
 #    rc('text', usetex=True)
 #    rc('axes', linewidth=2)
-#    vel_field_8543 = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_bs016759_vel_field.fits')[0].data
+#    vel_field_8543 = fits.open('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_vel_field.fits')[0].data
 #    data_vels, data_x = rt_pa.extract(0.4, 0.6, pa, vel_field_8543, xcen, ycen, pix_scale)
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(vel_data,
@@ -771,7 +771,7 @@ def cube_blur(vel_data,
 #                                                                                                             sersic_factor))
 #    plt.close('all')
 #    # Final comparison of the correction to the velocity dispersion
-#    sigma_data = fits.open('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_bs016759_sig_field.fits')[0].data
+#    sigma_data = fits.open('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_sig_field.fits')[0].data
 #    sigma_intrinsic = sigma_data - shifted_sigma
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(sigma_intrinsic,

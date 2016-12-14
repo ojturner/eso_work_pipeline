@@ -655,7 +655,15 @@ def extract_in_apertures_mcmc_version(gal_name,
     mod_vel, mod_vel_blurred, sig_blurred = model_vel
 
     # calculate the intrinsic sigma 2d field
-    sig_int = np.sqrt((sig_data - sig_blurred)**2 - sig_sky_data**2)
+    sig_int_squared = (sig_data - sig_blurred)**2 - sig_sky_data**2
+
+    # some of these values could be less than 0
+    for i in range(sig_int_squared.shape[0]):
+        for j in range(sig_int_squared.shape[1]):
+            if sig_int_squared[i,j] < 0:
+                sig_int_squared[i,j] = 0
+
+    sig_int = np.sqrt(sig_int_squared)
 
     # and the full sigma model
     sig_full_model = np.sqrt((sig_blurred + sigma)**2 + sig_sky_data**2)
@@ -3515,6 +3523,9 @@ def make_all_plots_mcmc_version(inc,
     vel_min, vel_max = np.nanpercentile(mod_vel_blurred_masked,
                                         [5.0, 95.0])
 
+    dat_vel_min, dat_vel_max = np.nanpercentile(data_vel,
+                                        [5.0, 95.0])
+
     sig_min, sig_max = np.nanpercentile(sig_int,
                                         [5.0, 95.0])
 
@@ -4883,7 +4894,7 @@ def make_all_plots_mcmc_version(inc,
 
     fig.tight_layout()
 
-    # plt.show()
+    #plt.show()
 
     fig.savefig('%s_grid_mcmc_params.png' % infile[:-5])
     plt.close('all')
@@ -4911,30 +4922,30 @@ def make_all_plots_mcmc_version(inc,
     # by using indices that will give a 1 arcsecond box centred on the galaxy
 
     # HST TYPE DATA INDICES
-    x_upper_hst = np.round(hst_x_cen + 25)
+    x_upper_hst = np.round(hst_x_cen + 15.0)
     if x_upper_hst >= data_hst.shape[0]:
         x_upper_hst = data_hst.shape[0] - 1
-    x_lower_hst = np.round(hst_x_cen - 25)
+    x_lower_hst = np.round(hst_x_cen - 15.0)
     if x_lower_hst < 0:
         x_lower_hst = 0
-    y_upper_hst = np.round(hst_y_cen + 25)
+    y_upper_hst = np.round(hst_y_cen + 15.0)
     if y_upper_hst >= data_hst.shape[1]:
         y_upper_hst = data_hst.shape[1] - 1
-    y_lower_hst = np.round(hst_y_cen - 25)
+    y_lower_hst = np.round(hst_y_cen - 15.0)
     if y_lower_hst < 0:
         y_lower_hst = 0
 
     # KMOS TYPE DATA INDICES
-    x_upper_kmos = np.round(xcen + 15.0)
+    x_upper_kmos = np.round(xcen + 12.0)
     if x_upper_kmos >= m_data_flux.shape[0]:
         x_upper_kmos = m_data_flux.shape[0] - 1
-    x_lower_kmos = np.round(xcen - 15.0)
+    x_lower_kmos = np.round(xcen - 12.0)
     if x_lower_kmos < 0:
         x_lower_kmos = 0
-    y_upper_kmos = np.round(ycen + 15.0)
+    y_upper_kmos = np.round(ycen + 12.0)
     if y_upper_kmos >= m_data_flux.shape[1]:
         y_upper_kmos = m_data_flux.shape[1] - 1
-    y_lower_kmos = np.round(ycen - 15.0)
+    y_lower_kmos = np.round(ycen - 12.0)
     if y_lower_kmos < 0:
         y_lower_kmos = 0
 
@@ -4951,16 +4962,23 @@ def make_all_plots_mcmc_version(inc,
     flux_plot_data = m_data_flux[x_lower_kmos:x_upper_kmos, y_lower_kmos:y_upper_kmos][::-1]
     vel_plot_data = m_data_vel[x_lower_kmos:x_upper_kmos, y_lower_kmos:y_upper_kmos][::-1]
     mod_vel_plot_data = m_data_mod_blurred[x_lower_kmos:x_upper_kmos, y_lower_kmos:y_upper_kmos][::-1]
+    res_plot_data = m_data_vel_res[x_lower_kmos:x_upper_kmos, y_lower_kmos:y_upper_kmos][::-1]
     sig_plot_data = m_data_sig[x_lower_kmos:x_upper_kmos, y_lower_kmos:y_upper_kmos][::-1]
 
+    # define the new hst centres (different formula due to where the counting begins)
+    new_hst_xcen = (hst_plot_data.shape[0] - (hst_x_cen - x_lower_hst))
+    new_hst_ycen = hst_y_cen - y_lower_hst - 1
+
     # define the new kmos centres
-    new_xcen = (flux_plot_data.shape[0] - (xcen - x_lower_kmos))
+    new_xcen = (flux_plot_data.shape[0] - 1 - (xcen - x_lower_kmos))
     new_ycen = ycen - y_lower_kmos
 
+    print 'SHAPES KMOS'
+    print m_data_flux.shape, flux_plot_data.shape, x_upper_kmos, x_lower_kmos, y_upper_kmos, y_lower_kmos
+    print 'SHAPES HST'
+    print data_hst.shape, hst_plot_data.shape, x_upper_hst, x_lower_hst, y_upper_hst, y_lower_hst
     print 'CENTERS'
-    print 'SHAPES'
-    print o_nband.shape, nband_plot_data.shape, m_data_flux.shape, flux_plot_data.shape,
-    print xcen, ycen, new_xcen, new_ycen, flux_plot_data.shape, m_data_flux.shape
+    print xcen, ycen, new_xcen, new_ycen, hst_x_cen, hst_y_cen, new_hst_xcen, new_hst_ycen
 
     # defining the subplot axes limits
 
@@ -5030,6 +5048,82 @@ def make_all_plots_mcmc_version(inc,
     plt.yticks([kmos_x_7,  kmos_x_5, kmos_x_4, kmos_x_3,     kmos_x_1], ['-1.5','-0.5', '0', '0.5', '1.5'], color='black')
 
     # also here want to plot the position angles onto the appropriate plots
+    # first check that pas are less than pi
+    hst_copy_pa = copy(hst_pa)
+    dyn_copy_pa = copy(pa)
+
+    if hst_copy_pa > np.pi:
+        hst_copy_pa = hst_copy_pa - np.pi
+    if dyn_copy_pa > np.pi:
+        dyn_copy_pa = dyn_copy_pa - np.pi
+
+    # now need to apply correction to account for the fact we are
+    # flipping in the y direction
+
+    hst_with_hst_limits = pa_calc.pa_limits(hst_copy_pa, new_hst_xcen, new_hst_ycen)
+    hst_with_hst_x_low = hst_with_hst_limits[0][0]
+    hst_with_hst_x_high = hst_with_hst_limits[0][1]
+
+    hst_with_hst_y_low = hst_with_hst_limits[1][0]
+    hst_with_hst_y_high = hst_with_hst_limits[1][1]
+
+    hst_with_kmos_limits = pa_calc.pa_limits(hst_copy_pa, new_xcen, new_ycen)
+    hst_with_kmos_x_low = hst_with_kmos_limits[0][0]
+    hst_with_kmos_x_high = hst_with_kmos_limits[0][1]
+
+    hst_with_kmos_y_low = hst_with_kmos_limits[1][0]
+    hst_with_kmos_y_high = hst_with_kmos_limits[1][1]
+
+    kmos_with_kmos_limits = pa_calc.pa_limits(dyn_copy_pa, new_xcen, new_ycen)
+    kmos_with_kmos_x_low = kmos_with_kmos_limits[0][0]
+    kmos_with_kmos_x_high = kmos_with_kmos_limits[0][1]
+
+    kmos_with_kmos_y_low = kmos_with_kmos_limits[1][0]
+    kmos_with_kmos_y_high = kmos_with_kmos_limits[1][1]
+
+    # and plot the PAs onto the diagrams
+
+    axes[0][0].plot([hst_with_hst_y_low, hst_with_hst_y_high], [hst_with_hst_x_high, hst_with_hst_x_low],
+                    ls='--',
+                    color='orange',
+                    lw=3)
+    axes[0][1].plot([hst_with_hst_y_low, hst_with_hst_y_high], [hst_with_hst_x_high, hst_with_hst_x_low],
+                    ls='--',
+                    color='orange',
+                    lw=3)
+    axes[1][0].plot([hst_with_kmos_y_low, hst_with_kmos_y_high], [hst_with_kmos_x_high, hst_with_kmos_x_low],
+                    ls='--',
+                    color='orange',
+                    lw=3)
+    axes[1][1].plot([hst_with_kmos_y_low, hst_with_kmos_y_high], [hst_with_kmos_x_high, hst_with_kmos_x_low],
+                    ls='--',
+                    color='orange',
+                    lw=3)
+    axes[1][2].plot([hst_with_kmos_y_low, hst_with_kmos_y_high], [hst_with_kmos_x_high, hst_with_kmos_x_low],
+                    ls='--',
+                    color='orange',
+                    lw=3)
+    axes[0][4].plot([hst_with_kmos_y_low, hst_with_kmos_y_high], [hst_with_kmos_x_high, hst_with_kmos_x_low],
+                    ls='--',
+                    color='orange',
+                    lw=3)
+    axes[1][0].plot([kmos_with_kmos_y_low, kmos_with_kmos_y_high], [kmos_with_kmos_x_high, kmos_with_kmos_x_low],
+                    ls='-',
+                    color='black',
+                    lw=3)
+    axes[1][1].plot([kmos_with_kmos_y_low, kmos_with_kmos_y_high], [kmos_with_kmos_x_high, kmos_with_kmos_x_low],
+                    ls='-',
+                    color='black',
+                    lw=3)
+    axes[1][2].plot([kmos_with_kmos_y_low, kmos_with_kmos_y_high], [kmos_with_kmos_x_high, kmos_with_kmos_x_low],
+                    ls='-',
+                    color='black',
+                    lw=3)
+    axes[0][4].plot([kmos_with_kmos_y_low, kmos_with_kmos_y_high], [kmos_with_kmos_x_high, kmos_with_kmos_x_low],
+                ls='-',
+                color='black',
+                lw=3)
+
 
     # HST PLOTTING
 
@@ -5039,7 +5133,7 @@ def make_all_plots_mcmc_version(inc,
 
     hst_im = axes[0][0].imshow(hst_plot_data,
                                cmap=cmap,
-                               vmax=5,
+                               vmax=12,
                                vmin=0)
 
 
@@ -5047,7 +5141,7 @@ def make_all_plots_mcmc_version(inc,
                     'z = %.2f' % redshift,
                     color='white',
                     fontsize=16)
-    axes[0][0].text(2,3,
+    axes[0][0].text(2,5,
                     '%s' % gal_name_short,
                     color='white',
                     fontsize=16)
@@ -5073,7 +5167,7 @@ def make_all_plots_mcmc_version(inc,
 
     galfit_im = axes[0][1].imshow(galfit_plot_data,
                                cmap=cmap,
-                               vmax=5,
+                               vmax=12,
                                vmin=0)
 
     axes[0][1].set(adjustable='box-forced', aspect='equal')
@@ -5096,7 +5190,7 @@ def make_all_plots_mcmc_version(inc,
 
     galfit_res_im = axes[0][2].imshow(galfit_res_plot_data,
                                cmap=cmap,
-                               vmax=5,
+                               vmax=12,
                                vmin=0)
 
     axes[0][2].set(adjustable='box-forced', aspect='equal')
@@ -5114,20 +5208,17 @@ def make_all_plots_mcmc_version(inc,
     [i.set_color('white') for i in axes[0][2].spines.itervalues()]
     [i.set_linewidth(2.0) for i in axes[0][2].spines.itervalues()]
 
+    # OIII FLUX
 
-    # OIII NARROWBAND
-
-    cmap = plt.cm.hot
+    cmap = plt.cm.jet
     cmap.set_bad('white', 1.)
 
-    nband_im = axes[0][3].imshow(nband_plot_data,
-                                 cmap=cmap,
-                                 vmax=3,
-                                 vmin=-0.3)
+    flux_im = axes[0][3].imshow(flux_plot_data,
+                                interpolation='nearest',
+                                cmap=cmap)
 
     axes[0][3].set(adjustable='box-forced', aspect='equal')
-    axes[0][3].text(1,4, 'OIII Narrowband', color='white', fontsize=16)
-    # tick parameters 
+    axes[0][3].text(3,2, 'OIII intensity', color='black', fontsize=16)
     axes[0][3].tick_params(axis='both',
                            which='major',
                            labelsize=10,
@@ -5135,26 +5226,7 @@ def make_all_plots_mcmc_version(inc,
                            width=2)
     [i.set_linewidth(2.0) for i in axes[0][3].spines.itervalues()]
 
-
-    # OIII FLUX
-
-    cmap = plt.cm.jet
-    cmap.set_bad('white', 1.)
-
-    flux_im = axes[0][4].imshow(flux_plot_data,
-                                interpolation='nearest',
-                                cmap=cmap)
-
-    axes[0][4].set(adjustable='box-forced', aspect='equal')
-    axes[0][4].text(3,3, 'OIII intensity', color='black', fontsize=16)
-    axes[0][4].tick_params(axis='both',
-                           which='major',
-                           labelsize=10,
-                           length=4,
-                           width=2)
-    [i.set_linewidth(2.0) for i in axes[0][4].spines.itervalues()]
-
-    axes[0][4].scatter(new_ycen,
+    axes[0][3].scatter(new_ycen,
                        new_xcen,
                        marker='+',
                        s=100,
@@ -5163,10 +5235,10 @@ def make_all_plots_mcmc_version(inc,
 
     # Plotting the beam size on here also
     from photutils import CircularAperture
-    positions = [(flux_plot_data.shape[0] - 6), (flux_plot_data.shape[1] - 6)]
-    apertures = CircularAperture(positions, r=(5 * seeing))
+    positions = [(flux_plot_data.shape[1] - 3), (flux_plot_data.shape[0] - 3)]
+    apertures = CircularAperture(positions, r=2)
 
-    apertures.plot(axes[0][4],lw=2)
+    apertures.plot(axes[0][3],lw=2)
 
 
     # OIII VEL
@@ -5184,7 +5256,7 @@ def make_all_plots_mcmc_version(inc,
                       interpolation='nearest',
                       cmap=cmap)
 
-    vel_data_cbaxes = fig.add_axes([0.07, 0.11, 0.1, 0.02]) 
+    vel_data_cbaxes = fig.add_axes([0.0675, 0.11, 0.1, 0.02]) 
     
     cb = plt.colorbar(vel_im,
                       cax = vel_data_cbaxes,
@@ -5199,13 +5271,7 @@ def make_all_plots_mcmc_version(inc,
                       fontsize=10,
                       fontweight='bold')
 
-    axes[1][0].scatter(new_ycen,
-                       new_xcen,
-                       marker='+',
-                       s=100,
-                       color='black',
-                       linewidths=3)
-    axes[1][0].text(4,3, r'Vel. (km s$^{-1}$)', color='black', fontsize=16)
+    axes[1][0].text(4,2, r'Vel. (km s$^{-1}$)', color='black', fontsize=16)
     axes[1][0].tick_params(axis='both',
                            which='major',
                            labelsize=10,
@@ -5213,22 +5279,13 @@ def make_all_plots_mcmc_version(inc,
                            width=2)
     [i.set_linewidth(2.0) for i in axes[1][0].spines.itervalues()]
 
-#    axes[1][0].plot([kmos_x_3,kmos_x_3],
-#                    [0,flux_plot_data.shape[1]],
-#                    color='silver',
-#                    ls='--')
-#    axes[1][0].plot([kmos_x_5,kmos_x_5],
-#                    [0,flux_plot_data.shape[1]],
-#                    color='silver',
-#                    ls='--')
-#    axes[1][0].plot([0,flux_plot_data.shape[0]],
-#                    [kmos_y_3,kmos_y_3],
-#                    color='silver',
-#                    ls='--')
-#    axes[1][0].plot([0,flux_plot_data.shape[0]],
-#                    [kmos_y_5,kmos_y_5],
-#                    color='silver',
-#                    ls='--')
+    # scatter central positions
+    axes[1][0].scatter(new_ycen,
+                       new_xcen,
+                       marker='+',
+                       s=120,
+                       color='black',
+                       linewidths=3)
 
     # OIII VEL MOD
 
@@ -5238,12 +5295,12 @@ def make_all_plots_mcmc_version(inc,
                       cmap=cmap)
 
     vel_mod_im = axes[1][1].imshow(mod_vel_plot_data,
-                                   vmin=-vel_limits,
-                                   vmax=vel_limits,
+                      vmin=-vel_limits,
+                      vmax=vel_limits,
                                    interpolation='nearest',
                                    cmap=cmap)
 
-    vel_mod_cbaxes = fig.add_axes([0.27, 0.11, 0.1, 0.02]) 
+    vel_mod_cbaxes = fig.add_axes([0.2675, 0.11, 0.1, 0.02]) 
     
     cb = plt.colorbar(vel_mod_im,
                       cax = vel_mod_cbaxes,
@@ -5261,7 +5318,7 @@ def make_all_plots_mcmc_version(inc,
                        s=100,
                        color='black',
                        linewidths=3)
-    axes[1][1].text(0,3, r'Model Vel. (km s$^{-1}$)',
+    axes[1][1].text(0,2, r'Model Vel. (km s$^{-1}$)',
                     color='black',
                     fontsize=13)
     axes[1][1].tick_params(axis='both',
@@ -5271,31 +5328,28 @@ def make_all_plots_mcmc_version(inc,
                            width=2)
     [i.set_linewidth(2.0) for i in axes[1][1].spines.itervalues()]
 
+    # OIII VEL MOD RESIDUAL
 
-    # OIII SIGMA
-
-    cmap = plt.cm.gnuplot
-    cmap.set_bad('white', 1.)
-
-    axes[1][2].imshow(sig_plot_data,
-                      vmin=sig_min,
-                      vmax=sig_max,
+    axes[1][2].imshow(res_plot_data,
+                      vmin=-vel_limits,
+                      vmax=vel_limits,
                       cmap=cmap)
 
-    sig_im = axes[1][2].imshow(sig_plot_data,
-                      vmin=sig_min,
-                      vmax=sig_max,
-                      interpolation='nearest',
-                      cmap=cmap)
+    vel_res_im = axes[1][2].imshow(res_plot_data,
+                      vmin=-vel_limits,
+                      vmax=vel_limits,
+                                   interpolation='nearest',
+                                   cmap=cmap)
 
-    sig_cbaxes = fig.add_axes([0.470, 0.11, 0.1, 0.02]) 
+    vel_res_cbaxes = fig.add_axes([0.4675, 0.11, 0.1, 0.02]) 
     
-    cb = plt.colorbar(sig_im,
-                      cax = sig_cbaxes,
+    cb = plt.colorbar(vel_res_im,
+                      cax = vel_res_cbaxes,
                       orientation='horizontal',
-                      ticks=[np.ceil(sig_min), 0, np.floor(sig_max)])
+                      ticks=[-vel_limits, vel_limits])
     cb.ax.xaxis.set_ticks_position('top')
     cb.ax.xaxis.set_label_position('top')
+
 
     axes[1][2].set(adjustable='box-forced', aspect='equal')
 
@@ -5305,15 +5359,59 @@ def make_all_plots_mcmc_version(inc,
                        s=100,
                        color='black',
                        linewidths=3)
-    axes[1][2].text(5,3, r'$\sigma_{int}$ (km s$^{-1}$)',
+    axes[1][2].text(0,2, r'Model Res. (km s$^{-1}$)',
                     color='black',
-                    fontsize=16)
+                    fontsize=13)
     axes[1][2].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
                            width=2)
     [i.set_linewidth(2.0) for i in axes[1][2].spines.itervalues()]
+
+
+    # OIII SIGMA
+
+    cmap = plt.cm.gnuplot
+    cmap.set_bad('white', 1.)
+
+    axes[0][4].imshow(sig_plot_data,
+                      vmin=sig_min,
+                      vmax=sig_max,
+                      cmap=cmap)
+
+    sig_im = axes[0][4].imshow(sig_plot_data,
+                      vmin=sig_min,
+                      vmax=sig_max,
+                      interpolation='nearest',
+                      cmap=cmap)
+
+    sig_cbaxes = fig.add_axes([0.8675, 0.60, 0.1, 0.02]) 
+    
+    cb = plt.colorbar(sig_im,
+                      cax = sig_cbaxes,
+                      orientation='horizontal',
+                      ticks=[np.ceil(sig_min), 0, np.floor(sig_max)])
+    cb.ax.xaxis.set_ticks_position('top')
+    cb.ax.xaxis.set_label_position('top')
+
+    axes[0][4].set(adjustable='box-forced', aspect='equal')
+
+    axes[0][4].scatter(new_ycen,
+                       new_xcen,
+                       marker='+',
+                       s=100,
+                       color='black',
+                       linewidths=3)
+    axes[0][4].text(5,2, r'$\sigma_{int}$ (km s$^{-1}$)',
+                    color='black',
+                    fontsize=16)
+    axes[0][4].tick_params(axis='both',
+                           which='major',
+                           labelsize=10,
+                           length=4,
+                           width=2)
+    [i.set_linewidth(2.0) for i in axes[0][4].spines.itervalues()]
 
     # OIII VEL 1-D
 
@@ -5465,35 +5563,34 @@ def make_all_plots_mcmc_version(inc,
                    one_d_data_sig,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
-                   color='red',
+                   color='blue',
                    label='obs_sig')
 
     axes[1][4].errorbar(one_d_model_x,
                    one_d_sig_int,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
-                   color='blue',
+                   color='red',
                    label='int_sig')
 
     axes[1][4].plot(one_d_model_x,
-                  one_d_sig_model_full,
-                  color='orange',
+                  one_d_sig_model_full - sigma,
+                  color='turquoise',
                   label='sig_model')
 
     axes[1][4].scatter(one_d_model_x,
-                    one_d_sig_model_full,
+                    one_d_sig_model_full - sigma,
                     marker='o',
-                  color='orange')
+                  color='turquoise')
 
-    axes[1][4].plot(one_d_model_x,
-                  one_d_sig_res,
-                  color='purple')
-
-    axes[1][4].scatter(one_d_model_x,
-                    one_d_sig_res,
-                    marker='o',
-                  color='purple',
-                  label='sig_residuals')   
+#    axes[1][4].plot(one_d_model_x,
+#                  one_d_sig_res,
+#                  color='purple')
+#    axes[1][4].scatter(one_d_model_x,
+#                    one_d_sig_res,
+#                    marker='o',
+#                  color='purple',
+#                  label='sig_residuals')   
 
     axes[1][4].axvline(0, color='silver', ls='-.')
     axes[1][4].axvline(r_d_arc_30, color='black', ls='--', lw=2)
@@ -5509,7 +5606,7 @@ def make_all_plots_mcmc_version(inc,
     #leg.get_frame().set_alpha(0.5)
     fig.tight_layout()
     plt.show()
-    fig.savefig('/scratch2/oturner/test.png')
+    fig.savefig('%s_grid_paper.png' % infile[:-5])
     plt.close('all')
 
     # some calculations for the final table
@@ -5809,20 +5906,50 @@ def make_all_plots_mcmc_version(inc,
 
     # V over sigma and error
     v_corred = v_2d_3Rd / np.sin(inclination_galfit)
-    v_over_sigma = v_2d_3Rd / sigma_o_i
+    v_over_sigma = v_corred / sigma_o_i
     v_over_sigma_error_upper = v_over_sigma * np.sqrt((v_2d_3Rd_upper_error/v_corred)**2 + (sigma_lower_error/sigma_o_i)**2)
     v_over_sigma_error_lower = v_over_sigma * np.sqrt((v_2d_3Rd_lower_error/v_corred)**2 + (sigma_upper_error/sigma_o_i)**2)
 
+    # S0.5 and error
+    s0 = np.sqrt(0.5*((v_2d_3Rd / np.sin(inclination_galfit))**2) + sigma_o_i**2)
+    s0_upper_error = np.sqrt(((v_2d_3Rd / np.sin(inclination_galfit)) * v_2d_3Rd_upper_error / 2.0)**2 + (sigma_o_i * sigma_upper_error)**2) / s0
+    s0_lower_error = np.sqrt(((v_2d_3Rd / np.sin(inclination_galfit)) * v_2d_3Rd_lower_error / 2.0)**2 + (sigma_o_i * sigma_lower_error)**2) / s0
+    log_s0 = np.log10(s0)
+    log_s0_upper_error = 0.434 * (s0_upper_error/s0)
+    log_s0_lower_error = 0.434 * (s0_lower_error/s0)
+
+    # finally if the kinematic inclination angle is
+    # greater than pi, subtract pi to make if comparable to HST
+
+    if pa > np.pi:
+        pa = pa - np.pi
+        pa_16 = pa_16 - np.pi
+        pa_84 = pa_84 - np.pi
+
+    # errors on the position angle
+    pa_upper_error = abs(pa_84 - pa)
+    pa_lower_error = abs(pa_16 - pa)
+
+    # and calculate the difference in position angles from HST to 
+    # dynamic for each galaxy
+    delta_pa = abs(pa - hst_pa)
+
+    # if greater than 90 do a trick
+    if delta_pa > np.pi / 2.:
+        delta_pa = np.pi / 2. - (delta_pa - np.pi / 2.)
+
+    print 'THIS IS THE DATA VELOCITY VALUE: %s %s' % (data_velocity_value, np.sin(inclination_galfit))
+
     data_values = [gal_name[26:-5],
-                   abs(data_velocity_value / np.sin(inclination_galfit)),
-                   data_velocity_error,
+                   int(abs(data_velocity_value / np.sin(inclination_galfit))),
+                   int(data_velocity_error),
                    abs(b_data_velocity_value / np.sin(inclination_galfit)),
                    rt_pa_observed_velocity_error,
-                   sigma_o,
-                   mean_sigma_error,
-                   sigma_o_i,
-                   sigma_upper_error,
-                   sigma_lower_error,
+                   int(sigma_o),
+                   int(mean_sigma_error),
+                   int(sigma_o_i),
+                   int(sigma_upper_error),
+                   int(sigma_lower_error),
                    data_sigma_value,
                    data_sigma_error,
                    data_sigma_value_int,
@@ -5839,42 +5966,51 @@ def make_all_plots_mcmc_version(inc,
                    data_velocity_error,
                    abs(v_smeared_2d_3Rd / np.sin(inclination_galfit)),
                    data_velocity_error,
-                   abs(v_2d_r22 / np.sin(inclination_galfit)),
-                   v_2d_r22_upper_error,
-                   v_2d_r22_lower_error,
-                   abs(v_2d_3Rd / np.sin(inclination_galfit)),
-                   v_2d_3Rd_upper_error,
-                   v_2d_3Rd_lower_error,
-                   abs(v_2d_r22_blurred / np.sin(inclination_galfit)),
-                   v_2d_r22_upper_error_blurred,
-                   v_2d_r22_lower_error_blurred,
-                   abs(v_2d_3Rd_blurred / np.sin(inclination_galfit)),
-                   v_2d_3Rd_upper_error_blurred,
-                   v_2d_3Rd_lower_error_blurred,
-                   mdyn_22,
-                   mdyn_30,
-                   v_over_sigma,
-                   v_over_sigma_error_upper,
-                   v_over_sigma_error_lower,
+                   int(abs(v_2d_r22 / np.sin(inclination_galfit))),
+                   int(v_2d_r22_upper_error),
+                   int(v_2d_r22_lower_error),
+                   int(abs(v_2d_3Rd / np.sin(inclination_galfit))),
+                   int(v_2d_3Rd_upper_error),
+                   int(v_2d_3Rd_lower_error),
+                   int(abs(v_2d_r22_blurred / np.sin(inclination_galfit))),
+                   int(v_2d_r22_upper_error_blurred),
+                   int(v_2d_r22_lower_error_blurred),
+                   int(abs(v_2d_3Rd_blurred / np.sin(inclination_galfit))),
+                   int(v_2d_3Rd_upper_error_blurred),
+                   int(v_2d_3Rd_lower_error_blurred),
+                   np.round(mdyn_22,2),
+                   np.round(mdyn_30, 2),
+                   np.round(v_over_sigma,2),
+                   np.round(v_over_sigma_error_upper, 2),
+                   np.round(v_over_sigma_error_lower, 2),
                    dyn_pa_extent,
-                   axis_r,
-                   inclination_galfit,
-                   hst_pa,
-                   pa,
-                   best_pa,
+                   np.round(axis_r,2),
+                   int((180 / np.pi) * inclination_galfit),
+                   int((180 / np.pi) * hst_pa),
+                   int((180 / np.pi) * pa),
+                   int((180 / np.pi) * pa_upper_error),
+                   int((180 / np.pi) * pa_lower_error),
+                   int((180 / np.pi) * best_pa),
+                   int((180 / np.pi) * delta_pa),
                    r_e_arc,
                    r_d_arc,
                    r_d_arc_22,
                    r_d_arc_30,
-                   r_e,
-                   r_d,
-                   r_d_22,
-                   r_d_30,
-                   rd_psf,
-                   dur_vel_val / np.sin(inclination_galfit),
-                   dur_vel_val_3 / np.sin(inclination_galfit),
-                   dur_mean_sig,
-                   dur_outer_sig]
+                   np.round(r_e,2),
+                   np.round(r_d,2),
+                   np.round(r_d_22,2),
+                   np.round(r_d_30,2),
+                   np.round(rd_psf,2),
+                   int(dur_vel_val / np.sin(inclination_galfit)),
+                   int(dur_vel_val_3 / np.sin(inclination_galfit)),
+                   int(dur_mean_sig),
+                   int(dur_outer_sig),
+                   s0,
+                   s0_upper_error,
+                   s0_lower_error,
+                   log_s0,
+                   log_s0_upper_error,
+                   log_s0_lower_error]
 
     print 'CONSTANTS: %s %s %s' % (dyn_constant, rot_constant, hst_constant)
     print 'OBSERVED_VELOCITY_DYNAMIC_PA: %s' % abs(data_velocity_value / np.sin(inclination_galfit))
@@ -5988,7 +6124,10 @@ def multi_make_all_plots_mcmc_version(infile,
                     'inclination',
                     'HST_PA',
                     'DYN_PA',
+                    'DYN_PA_upper_error',
+                    'DYN_PA_lower_error',
                     'R_PA',
+                    'Delta_PA',
                     'R_e(arcsec)',
                     'R_d(arcsec)',
                     '2.2R_d(arcsec)',
@@ -6001,7 +6140,13 @@ def multi_make_all_plots_mcmc_version(infile,
                     'Durham_Vel_corr_2Rd',
                     'Durham_Vel_corr_3Rd',
                     'Durham_Sig_mean_corr',
-                    'Durham_Sig_outer_corr']
+                    'Durham_Sig_outer_corr',
+                    's0',
+                    's0_upper_error',
+                    's0_lower_error',
+                    'log_s0',
+                    'log_s0_upper_error',
+                    'log_s0_lower_error']
 
 
     save_dir = '/scratch2/oturner/disk1/turner/DATA/kmos_dynamics_paper_plots/'
@@ -6085,10 +6230,10 @@ def multi_make_all_plots_mcmc_version(infile,
     make_table.table_create(column_names,
                             big_list,
                             save_dir,
-                            'goods_isolated_rotator_properties_test.cat')
+                            'ssa_mergers_properties.cat')
 
-infile = '/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt'
-boundaries_file = '/scratch2/oturner/disk1/turner/DATA/goods_iso_boundaries.txt'
+infile = '/scratch2/oturner/disk1/turner/DATA/ssa_mergers_names.txt'
+boundaries_file = '/scratch2/oturner/disk1/turner/DATA/ssa_mergers_boundaries.txt'
 #multi_make_all_plots_fixed_inc_fixed(infile=infile,
 #                                     r_aper=0.8,
 #                                     d_aper=0.6,
@@ -6104,7 +6249,7 @@ boundaries_file = '/scratch2/oturner/disk1/turner/DATA/goods_iso_boundaries.txt'
 multi_make_all_plots_mcmc_version(infile=infile,
                                   r_aper=0.8,
                                   d_aper=0.6,
-                                  seeing=0.5,
+                                  seeing=0.01,
                                   sersic_n=1.0,
                                   sigma=50,
                                   pix_scale=0.1,

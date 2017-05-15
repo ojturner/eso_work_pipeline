@@ -34,11 +34,11 @@ from photutils import EllipticalAperture
 from photutils import aperture_photometry
 
 # add the class file to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import flatfield_cube as f_f
@@ -1499,22 +1499,22 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[1][0].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][0].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][0].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     ax[1][0].plot([y_low_num, y_high_num], [x_low_num, x_high_num],
                ls='--',
                color='wheat',
                lw=2,
-               label='num_pa')
+               label='num\_pa')
     l = ax[1][0].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -1524,17 +1524,17 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[1][1].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][1].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][1].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][1].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -1543,17 +1543,17 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[1][2].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][2].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][2].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][2].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -1562,17 +1562,17 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[1][3].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][3].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][3].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][3].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -1581,17 +1581,17 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[1][4].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][4].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][4].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][4].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -1600,17 +1600,17 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[2][4].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[2][4].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[2][4].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[2][4].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -1677,7 +1677,7 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[0][0].text(4,14, 'pa = %.2f' % hst_pa, color='black', fontsize=16)
     ax[0][0].text(data_hst.shape[0] - 25,
                   data_hst.shape[1] - 6,
-                  'F160_W', color='black', fontsize=16)
+                  'F160\_W', color='black', fontsize=16)
 
     ax[0][0].tick_params(axis='x',
                       labelbottom='off')
@@ -2091,7 +2091,7 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[2][0].plot(one_d_model_x,
                   one_d_mod_vel_intrinsic,
                   color='red',
-                  label='int_model')
+                  label='int\_model')
 
     ax[2][0].scatter(one_d_model_x,
                     one_d_mod_vel_intrinsic,
@@ -2101,7 +2101,7 @@ def make_all_plots_fixed_inc_fixed(inc,
     ax[2][0].plot(one_d_model_x,
                   one_d_mod_vel_blurred,
                   color='blue',
-                  label='blurred_model')
+                  label='blurred\_model')
 
     ax[2][0].scatter(one_d_model_x,
                     one_d_mod_vel_blurred,
@@ -2215,19 +2215,19 @@ def make_all_plots_fixed_inc_fixed(inc,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
                    color='red',
-                   label='obs_sig')
+                   label='obs\_sig')
 
     ax[2][1].errorbar(one_d_model_x,
                    one_d_sig_int,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
                    color='blue',
-                   label='int_sig')
+                   label='int\_sig')
 
     ax[2][1].plot(one_d_model_x,
                   one_d_sig_model_full,
                   color='orange',
-                  label='sig_model')
+                  label='sig\_model')
 
     ax[2][1].scatter(one_d_model_x,
                     one_d_sig_model_full,
@@ -2242,7 +2242,7 @@ def make_all_plots_fixed_inc_fixed(inc,
                     one_d_sig_res,
                     marker='o',
                   color='purple',
-                  label='sig_residuals')   
+                  label='sig\_residuals')   
 
     ax[2][1].axvline(0, color='silver', ls='-.')
     ax[2][1].axvline(r_e_arc, color='maroon', ls='--', lw=2)
@@ -2380,7 +2380,7 @@ def make_all_plots_fixed_inc_fixed(inc,
                    yerr=one_d_data_vel_errors,
                    fmt='o',
                    color='blue',
-                   label='dyn_pa')
+                   label='dyn\_pa')
 
     ax[3][2].plot(best_pa_x,
                   best_pa_fit.eval(r=best_pa_x),
@@ -2391,7 +2391,7 @@ def make_all_plots_fixed_inc_fixed(inc,
                       yerr=best_pa_error,
                       fmt='o',
                       color='darkorange',
-                      label='rot_pa')
+                      label='rot\_pa')
 
     ax[3][2].plot(hst_pa_x,
                   hst_pa_fit.eval(r=hst_pa_x),
@@ -2402,7 +2402,7 @@ def make_all_plots_fixed_inc_fixed(inc,
                       yerr=hst_pa_error,
                       fmt='o',
                       color='aquamarine',
-                      label='hst_pa')
+                      label='hst\_pa')
 
     ax[3][2].set_title('Model and Real Velocity')
 
@@ -2799,7 +2799,7 @@ def multi_make_all_plots_fixed_inc_fixed(infile,
                     'Durham_Sig_outer_corr']
 
 
-    save_dir = '/scratch2/oturner/disk1/turner/DATA/kmos_dynamics_paper_plots/'
+    save_dir = '/disk2/turner/disk1/turner/DATA/kmos_dynamics_paper_plots/'
 
     big_list = []
 
@@ -3883,22 +3883,22 @@ def make_all_plots_mcmc_version(inc,
     ax[1][0].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][0].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][0].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     ax[1][0].plot([y_low_num, y_high_num], [x_low_num, x_high_num],
                ls='--',
                color='wheat',
                lw=2,
-               label='num_pa')
+               label='num\_pa')
     l = ax[1][0].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -3908,17 +3908,17 @@ def make_all_plots_mcmc_version(inc,
     ax[1][1].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][1].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][1].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][1].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -3927,17 +3927,17 @@ def make_all_plots_mcmc_version(inc,
     ax[1][2].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][2].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][2].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][2].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -3946,17 +3946,17 @@ def make_all_plots_mcmc_version(inc,
     ax[1][3].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][3].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][3].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][3].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -3965,17 +3965,17 @@ def make_all_plots_mcmc_version(inc,
     ax[1][4].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[1][4].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[1][4].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[1][4].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -3984,17 +3984,17 @@ def make_all_plots_mcmc_version(inc,
     ax[2][4].plot([y_h_low, y_h_high], [x_h_low, x_h_high],
                ls='--',
                color='aquamarine',
-               label='hst_pa')
+               label='hst\_pa')
     ax[2][4].plot([y_low, y_high], [x_low, x_high],
                ls='--',
                color='lightcoral',
                lw=2,
-               label='dyn_pa')
+               label='dyn\_pa')
     ax[2][4].plot([y_low_best, y_high_best], [x_low_best, x_high_best],
                ls='--',
                color='darkorange',
                lw=2,
-               label='rot_pa')
+               label='rot\_pa')
     l = ax[2][4].legend(loc='best',
                         frameon=False,
                         prop={'size':10})
@@ -4475,7 +4475,7 @@ def make_all_plots_mcmc_version(inc,
     ax[2][0].plot(one_d_model_x,
                   one_d_mod_vel_intrinsic,
                   color='red',
-                  label='int_model',
+                  label='int\_model',
                   lw=2)
 
 #    ax[2][0].scatter(one_d_model_x,
@@ -4486,7 +4486,7 @@ def make_all_plots_mcmc_version(inc,
     ax[2][0].plot(one_d_model_x,
                   one_d_mod_vel_blurred,
                   color='blue',
-                  label='blurred_model',
+                  label='blurred\_model',
                   lw=2)
 
 #    ax[2][0].scatter(one_d_model_x,
@@ -4621,19 +4621,19 @@ def make_all_plots_mcmc_version(inc,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
                    color='red',
-                   label='obs_sig')
+                   label='obs\_sig')
 
     ax[2][1].errorbar(one_d_model_x,
                    one_d_sig_int,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
                    color='blue',
-                   label='int_sig')
+                   label='int\_sig')
 
     ax[2][1].plot(one_d_model_x,
                   one_d_sig_model_full,
                   color='orange',
-                  label='sig_model')
+                  label='sig\_model')
 
     ax[2][1].scatter(one_d_model_x,
                     one_d_sig_model_full,
@@ -4648,7 +4648,7 @@ def make_all_plots_mcmc_version(inc,
                     one_d_sig_res,
                     marker='o',
                   color='purple',
-                  label='sig_residuals')   
+                  label='sig\_residuals')   
 
     ax[2][1].axvline(0, color='silver', ls='-.')
     ax[2][1].axvline(r_e_arc_conv, color='maroon', ls='--', lw=2)
@@ -4806,7 +4806,7 @@ def make_all_plots_mcmc_version(inc,
                    yerr=one_d_data_vel_errors,
                    fmt='o',
                    color='blue',
-                   label='dyn_pa')
+                   label='dyn\_pa')
 
     ax[3][2].plot(best_pa_x,
                   best_pa_fit.eval(r=best_pa_x),
@@ -4817,7 +4817,7 @@ def make_all_plots_mcmc_version(inc,
                       yerr=best_pa_error,
                       fmt='o',
                       color='darkorange',
-                      label='rot_pa')
+                      label='rot\_pa')
 
     ax[3][2].plot(hst_pa_x,
                   hst_pa_fit.eval(r=hst_pa_x),
@@ -4828,7 +4828,7 @@ def make_all_plots_mcmc_version(inc,
                       yerr=hst_pa_error,
                       fmt='o',
                       color='aquamarine',
-                      label='hst_pa')
+                      label='hst\_pa')
 
     ax[3][2].set_title('Model and Real Velocity')
 
@@ -4888,7 +4888,7 @@ def make_all_plots_mcmc_version(inc,
     leg = ax[3][2].legend(loc='upper left',fancybox=True, prop={'size':8})
     leg.get_frame().set_alpha(0.5)
 
-    plt.suptitle('%s' % gal_name)
+    #plt.suptitle('%s' % gal_name)
 
     # and the 1D plot showing the aperture growth
 
@@ -4898,6 +4898,12 @@ def make_all_plots_mcmc_version(inc,
 
     fig.savefig('%s_grid_mcmc_params.png' % infile[:-5])
     plt.close('all')
+
+    rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+    rc('font', weight='bold')
+    rc('text', usetex=True)
+    rc('axes', linewidth=2)
+    plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 
     # Now create the grids for the paper
     fig, axes = plt.subplots(nrows=2, ncols=5, figsize=(14, 5))
@@ -5133,17 +5139,20 @@ def make_all_plots_mcmc_version(inc,
 
     hst_im = axes[0][0].imshow(hst_plot_data,
                                cmap=cmap,
-                               vmax=12,
+                               vmax=8,
                                vmin=0)
 
 
     axes[0][0].text(2,hst_plot_data.shape[0] - 3,
-                    'z = %.2f' % redshift,
-                    color='white',
+                    r'\textbf{z = %.2f}' % redshift,
+                    color='lightgray',
                     fontsize=16)
+
+    gal_name_short = gal_name_short.replace('_','\_')
+
     axes[0][0].text(2,5,
-                    '%s' % gal_name_short,
-                    color='white',
+                    r'\textbf{%s}' % gal_name_short,
+                    color='lightgray',
                     fontsize=16)
 
     axes[0][0].set(adjustable='box-forced', aspect='equal')
@@ -5153,12 +5162,12 @@ def make_all_plots_mcmc_version(inc,
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2,
-                           color='white')
-    [i.set_color('white') for i in axes[0][0].spines.itervalues()]
-    [i.set_linewidth(2.0) for i in axes[0][0].spines.itervalues()]
-    axes[0][0].set_ylabel(r'arcsec',
-                           fontsize=10,
+                           width=4,
+                           color='lightgray')
+    [i.set_color('lightgray') for i in axes[0][0].spines.itervalues()]
+    [i.set_linewidth(4.0) for i in axes[0][0].spines.itervalues()]
+    axes[0][0].set_ylabel(r'\textbf{arcsec}',
+                           fontsize=14,
                            fontweight='bold')
 
 
@@ -5167,46 +5176,47 @@ def make_all_plots_mcmc_version(inc,
 
     galfit_im = axes[0][1].imshow(galfit_plot_data,
                                cmap=cmap,
-                               vmax=12,
+                               vmax=8,
                                vmin=0)
 
     axes[0][1].set(adjustable='box-forced', aspect='equal')
     axes[0][1].text(2,hst_plot_data.shape[0] - 3,
-                    'Galfit Model',
-                    color='white',
+                    r'\textbf{Galfit Model}',
+                    color='lightgray',
                     fontsize=16)
+
     # tick parameters 
     axes[0][1].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2,
-                           color='white')
-    [i.set_color('white') for i in axes[0][1].spines.itervalues()]
-    [i.set_linewidth(2.0) for i in axes[0][1].spines.itervalues()]
+                           width=4,
+                           color='lightgray')
+    [i.set_color('lightgray') for i in axes[0][1].spines.itervalues()]
+    [i.set_linewidth(4.0) for i in axes[0][1].spines.itervalues()]
 
 
     # GALFIT RESIDUALS
 
     galfit_res_im = axes[0][2].imshow(galfit_res_plot_data,
                                cmap=cmap,
-                               vmax=12,
+                               vmax=8,
                                vmin=0)
 
     axes[0][2].set(adjustable='box-forced', aspect='equal')
     axes[0][2].text(2,hst_plot_data.shape[0] - 3,
-                    'Galfit Residual',
-                    color='white',
+                    r'\textbf{Galfit Residual}',
+                    color='lightgray',
                     fontsize=16)
     # tick parameters 
     axes[0][2].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2,
-                           color='white')
-    [i.set_color('white') for i in axes[0][2].spines.itervalues()]
-    [i.set_linewidth(2.0) for i in axes[0][2].spines.itervalues()]
+                           width=4,
+                           color='lightgray')
+    [i.set_color('lightgray') for i in axes[0][2].spines.itervalues()]
+    [i.set_linewidth(4.0) for i in axes[0][2].spines.itervalues()]
 
     # OIII FLUX
 
@@ -5218,13 +5228,13 @@ def make_all_plots_mcmc_version(inc,
                                 cmap=cmap)
 
     axes[0][3].set(adjustable='box-forced', aspect='equal')
-    axes[0][3].text(3,2, 'OIII intensity', color='black', fontsize=16)
+    axes[0][3].text(1,2, r'\textbf{[O~{\sc III}] Intensity}', color='black', fontsize=16)
     axes[0][3].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2)
-    [i.set_linewidth(2.0) for i in axes[0][3].spines.itervalues()]
+                           width=4)
+    [i.set_linewidth(4.0) for i in axes[0][3].spines.itervalues()]
 
     axes[0][3].scatter(new_ycen,
                        new_xcen,
@@ -5264,20 +5274,23 @@ def make_all_plots_mcmc_version(inc,
                       ticks=[-vel_limits, vel_limits])
     cb.ax.xaxis.set_ticks_position('top')
     cb.ax.xaxis.set_label_position('top')
+    for l in cb.ax.xaxis.get_ticklabels():
+        l.set_weight("bold")
+        l.set_fontsize(16)
 
     axes[1][0].set(adjustable='box-forced', aspect='equal')
 
-    axes[1][0].set_ylabel(r'arcsec',
-                      fontsize=10,
+    axes[1][0].set_ylabel(r'\textbf{arcsec}',
+                      fontsize=14,
                       fontweight='bold')
 
-    axes[1][0].text(4,2, r'Vel. (km s$^{-1}$)', color='black', fontsize=16)
+    axes[1][0].text(4,2, r'\textbf{Vel. (km s$\boldsymbol{^{-1}}$)}', color='black', fontsize=16)
     axes[1][0].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2)
-    [i.set_linewidth(2.0) for i in axes[1][0].spines.itervalues()]
+                           width=4)
+    [i.set_linewidth(4.0) for i in axes[1][0].spines.itervalues()]
 
     # scatter central positions
     axes[1][0].scatter(new_ycen,
@@ -5308,6 +5321,9 @@ def make_all_plots_mcmc_version(inc,
                       ticks=[-vel_limits, vel_limits])
     cb.ax.xaxis.set_ticks_position('top')
     cb.ax.xaxis.set_label_position('top')
+    for l in cb.ax.xaxis.get_ticklabels():
+        l.set_weight("bold")
+        l.set_fontsize(16)
 
 
     axes[1][1].set(adjustable='box-forced', aspect='equal')
@@ -5318,15 +5334,15 @@ def make_all_plots_mcmc_version(inc,
                        s=100,
                        color='black',
                        linewidths=3)
-    axes[1][1].text(0,2, r'Model Vel. (km s$^{-1}$)',
+    axes[1][1].text(0,2, r'\textbf{Model Vel. (km s$\boldsymbol{^{-1}}$)}',
                     color='black',
                     fontsize=13)
     axes[1][1].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2)
-    [i.set_linewidth(2.0) for i in axes[1][1].spines.itervalues()]
+                           width=4)
+    [i.set_linewidth(4.0) for i in axes[1][1].spines.itervalues()]
 
     # OIII VEL MOD RESIDUAL
 
@@ -5349,6 +5365,9 @@ def make_all_plots_mcmc_version(inc,
                       ticks=[-vel_limits, vel_limits])
     cb.ax.xaxis.set_ticks_position('top')
     cb.ax.xaxis.set_label_position('top')
+    for l in cb.ax.xaxis.get_ticklabels():
+        l.set_weight("bold")
+        l.set_fontsize(16)
 
 
     axes[1][2].set(adjustable='box-forced', aspect='equal')
@@ -5359,15 +5378,15 @@ def make_all_plots_mcmc_version(inc,
                        s=100,
                        color='black',
                        linewidths=3)
-    axes[1][2].text(0,2, r'Model Res. (km s$^{-1}$)',
+    axes[1][2].text(0,2, r'\textbf{Model Res. (km s$\boldsymbol{^{-1}}$)}',
                     color='black',
                     fontsize=13)
     axes[1][2].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2)
-    [i.set_linewidth(2.0) for i in axes[1][2].spines.itervalues()]
+                           width=4)
+    [i.set_linewidth(4.0) for i in axes[1][2].spines.itervalues()]
 
 
     # OIII SIGMA
@@ -5394,6 +5413,9 @@ def make_all_plots_mcmc_version(inc,
                       ticks=[np.ceil(sig_min), 0, np.floor(sig_max)])
     cb.ax.xaxis.set_ticks_position('top')
     cb.ax.xaxis.set_label_position('top')
+    for l in cb.ax.xaxis.get_ticklabels():
+        l.set_weight("bold")
+        l.set_fontsize(16)
 
     axes[0][4].set(adjustable='box-forced', aspect='equal')
 
@@ -5403,28 +5425,28 @@ def make_all_plots_mcmc_version(inc,
                        s=100,
                        color='black',
                        linewidths=3)
-    axes[0][4].text(5,2, r'$\sigma_{int}$ (km s$^{-1}$)',
+    axes[0][4].text(5,2, r'\textbf{$\boldsymbol{\sigma_{int}}$ (km s$\boldsymbol{^{-1}}$)}',
                     color='black',
                     fontsize=16)
     axes[0][4].tick_params(axis='both',
                            which='major',
                            labelsize=10,
                            length=4,
-                           width=2)
-    [i.set_linewidth(2.0) for i in axes[0][4].spines.itervalues()]
+                           width=4)
+    [i.set_linewidth(4.0) for i in axes[0][4].spines.itervalues()]
 
     # OIII VEL 1-D
 
 
-    axes[1][3].set_ylabel(r'V$_{c}$[kms$^{-1}$]',
-                      fontsize=10,
+    axes[1][3].set_ylabel(r'\textbf{V$\boldsymbol{_{C}}$[kms$\boldsymbol{^{-1}}$]}',
+                      fontsize=14,
                       fontweight='bold')
     # tick parameters 
     axes[1][3].tick_params(axis='both',
                        which='major',
                        labelsize=10,
                        length=6,
-                       width=2)
+                       width=4)
     axes[1][3].tick_params(axis='both',
                        which='minor',
                        labelsize=10,
@@ -5434,8 +5456,13 @@ def make_all_plots_mcmc_version(inc,
     axes[1][3].plot(one_d_model_x,
                   one_d_mod_vel_intrinsic,
                   color='red',
-                  label='int_model',
+                  label='int\_model',
                   lw=2)
+    axes[1][3].fill_between(one_d_model_x,
+                          one_d_mod_vel_intrinsic_16,
+                          one_d_mod_vel_intrinsic_84,
+                          facecolor='indianred',
+                          alpha=0.5)
 
 #    axes[1][3].scatter(one_d_model_x,
 #                    one_d_mod_vel_intrinsic,
@@ -5445,7 +5472,7 @@ def make_all_plots_mcmc_version(inc,
     axes[1][3].plot(one_d_model_x,
                   one_d_mod_vel_blurred,
                   color='blue',
-                  label='blurred_model',
+                  label='blurred\_model',
                   lw=2)
 
 #    axes[1][3].scatter(one_d_model_x,
@@ -5480,11 +5507,7 @@ def make_all_plots_mcmc_version(inc,
 
     # new addition showing the error region
 
-    axes[1][3].fill_between(one_d_model_x,
-                          one_d_mod_vel_intrinsic_16,
-                          one_d_mod_vel_intrinsic_84,
-                          facecolor='indianred',
-                          alpha=0.5)
+
     axes[1][3].fill_between(one_d_model_x,
                           one_d_mod_vel_blurred_16,
                           one_d_mod_vel_blurred_84,
@@ -5503,31 +5526,31 @@ def make_all_plots_mcmc_version(inc,
     # should be extracted
 
     axes[1][3].plot([r_d_arc_conv_30, r_d_arc_conv_30], [-1*va, va],
-                  color='black',
+                  color='blue',
                   ls='--',
                   lw=2)
 
 
 
     axes[1][3].plot([-r_d_arc_conv_30, -r_d_arc_conv_30], [-1*va, va],
-                  color='black',
+                  color='blue',
                   ls='--',
                   lw=2)
 
     axes[1][3].plot([r_d_arc_30, r_d_arc_30], [-1*va, va],
-                  color='black',
+                  color='red',
                   ls='--',
                   lw=2)
     
 
 
     axes[1][3].plot([-r_d_arc_30, -r_d_arc_30], [-1*va, va],
-                  color='black',
+                  color='red',
                   ls='--',
                   lw=2)
 
-    [i.set_linewidth(2.0) for i in axes[1][3].spines.itervalues()]
-    [i.set_linewidth(2.0) for i in axes[1][4].spines.itervalues()]
+    [i.set_linewidth(4.0) for i in axes[1][3].spines.itervalues()]
+    [i.set_linewidth(4.0) for i in axes[1][4].spines.itervalues()]
 
     axes[1][3].minorticks_on()
 
@@ -5540,8 +5563,8 @@ def make_all_plots_mcmc_version(inc,
 
     # axes[1][4].set(adjustable='box-forced', aspect='equal')
 
-    axes[1][4].set_ylabel(r'$\sigma$[kms$^{-1}$]',
-                      fontsize=10,
+    axes[1][4].set_ylabel(r'\textbf{$\boldsymbol{\sigma_{int}}$[kms$\boldsymbol{^{-1}}$]}',
+                      fontsize=14,
                       fontweight='bold')
 
     # tick parameters 
@@ -5549,7 +5572,7 @@ def make_all_plots_mcmc_version(inc,
                        which='major',
                        labelsize=10,
                        length=6,
-                       width=2)
+                       width=4)
     axes[1][4].tick_params(axis='both',
                        which='minor',
                        labelsize=10,
@@ -5564,24 +5587,30 @@ def make_all_plots_mcmc_version(inc,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
                    color='blue',
-                   label='obs_sig')
+                   label='obs\_sig')
 
     axes[1][4].errorbar(one_d_model_x,
                    one_d_sig_int,
                    yerr=one_d_data_sig_errors,
                    fmt='o',
                    color='red',
-                   label='int_sig')
+                   label='int\_sig')
 
-    axes[1][4].plot(one_d_model_x,
-                  one_d_sig_model_full - sigma,
-                  color='turquoise',
-                  label='sig_model')
+    # instead of plotting the turquoise
+    # plot instead horizontal lines showing 
+    # intrinsic and observed velocity dispersions
 
-    axes[1][4].scatter(one_d_model_x,
-                    one_d_sig_model_full - sigma,
-                    marker='o',
-                  color='turquoise')
+    axes[1][4].axhline(sigma_o, color='blue', ls='-.', lw=2)
+    axes[1][4].axhline(sigma_o_i, color='red', ls='-.', lw=2)
+
+#    axes[1][4].plot(one_d_model_x,
+#                  one_d_sig_model_full - sigma,
+#                  color='turquoise',
+#                  label='sig\_model')
+#    axes[1][4].scatter(one_d_model_x,
+#                    one_d_sig_model_full - sigma,
+#                    marker='o',
+#                  color='turquoise')
 
 #    axes[1][4].plot(one_d_model_x,
 #                  one_d_sig_res,
@@ -5590,13 +5619,13 @@ def make_all_plots_mcmc_version(inc,
 #                    one_d_sig_res,
 #                    marker='o',
 #                  color='purple',
-#                  label='sig_residuals')   
+#                  label='sig\_residuals')   
 
     axes[1][4].axvline(0, color='silver', ls='-.')
-    axes[1][4].axvline(r_d_arc_30, color='black', ls='--', lw=2)
-    axes[1][4].axvline(-r_d_arc_30, color='black', ls='--', lw=2)
-    axes[1][4].axvline(r_d_arc_conv_30, color='black', ls='--', lw=2)
-    axes[1][4].axvline(-r_d_arc_conv_30, color='black', ls='--', lw=2)
+#    axes[1][4].axvline(r_d_arc_30, color='cornflowerblue', ls='--', lw=2)
+#    axes[1][4].axvline(-r_d_arc_30, color='cornflowerblue', ls='--', lw=2)
+#    axes[1][4].axvline(r_d_arc_conv_30, color='indianred', ls='--', lw=2)
+#    axes[1][4].axvline(-r_d_arc_conv_30, color='indianred', ls='--', lw=2)
     axes[1][4].set_xlim(-1.2, 1.2)
 
 
@@ -5941,7 +5970,7 @@ def make_all_plots_mcmc_version(inc,
     print 'THIS IS THE DATA VELOCITY VALUE: %s %s' % (data_velocity_value, np.sin(inclination_galfit))
 
     data_values = [gal_name[26:-5],
-                   int(abs(data_velocity_value / np.sin(inclination_galfit))),
+                   int(abs(data_velocity_value)),
                    int(data_velocity_error),
                    abs(b_data_velocity_value / np.sin(inclination_galfit)),
                    rt_pa_observed_velocity_error,
@@ -6149,7 +6178,7 @@ def multi_make_all_plots_mcmc_version(infile,
                     'log_s0_lower_error']
 
 
-    save_dir = '/scratch2/oturner/disk1/turner/DATA/kmos_dynamics_paper_plots/'
+    save_dir = '/disk2/turner/disk1/turner/DATA/kmos_dynamics_paper_plots/'
 
     big_list = []
 
@@ -6230,10 +6259,10 @@ def multi_make_all_plots_mcmc_version(infile,
     make_table.table_create(column_names,
                             big_list,
                             save_dir,
-                            'ssa_mergers_properties.cat')
+                            'lbg_121.cat')
 
-infile = '/scratch2/oturner/disk1/turner/DATA/ssa_mergers_names.txt'
-boundaries_file = '/scratch2/oturner/disk1/turner/DATA/ssa_mergers_boundaries.txt'
+infile = '/disk2/turner/disk1/turner/PhD/PAPER_3_KDS_METALLICITIES/OBJECT_NAMES/k_band_names.txt'
+boundaries_file = '/disk2/turner/disk1/turner/DATA/goods_iso_boundaries.txt'
 #multi_make_all_plots_fixed_inc_fixed(infile=infile,
 #                                     r_aper=0.8,
 #                                     d_aper=0.6,
@@ -6249,7 +6278,7 @@ boundaries_file = '/scratch2/oturner/disk1/turner/DATA/ssa_mergers_boundaries.tx
 multi_make_all_plots_mcmc_version(infile=infile,
                                   r_aper=0.8,
                                   d_aper=0.6,
-                                  seeing=0.01,
+                                  seeing=0.5,
                                   sersic_n=1.0,
                                   sigma=50,
                                   pix_scale=0.1,

@@ -181,18 +181,27 @@ class cubeOps(object):
 
         except KeyError:
 
-            try:
+            self.noise_header = self.Table[2].header
 
-                self.noise_header = self.Table[2].header
+            for i in range(1,25):
 
-                self.IFUNR = self.noise_header["HIERARCH ESO PRO IFUNR"]
+                try:
 
-                key = 'HIERARCH ESO OCS ARM' + str(self.IFUNR) + ' NAME'
+                    self.IFUNR = i
 
-                # print key
-                self.IFUName = self.noise_header[key]
+                    key = 'HIERARCH ESO OCS ARM' + str(self.IFUNR) + ' NAME'
 
-            except:
+                    # print key
+                    self.IFUName = self.noise_header[key]
+
+                    break
+
+                except KeyError:
+
+                    self.IFUName = 'blank'
+                    self.IFUNR = -99
+
+            if self.IFUName == 'blank':
 
                 print '[INFO]: This is not a combined Frame' \
                     + ', setting arm name...'
@@ -1167,7 +1176,7 @@ class cubeOps(object):
 
         colFig.savefig(saveName)
 
-        # plt.show()
+        #plt.show()
         plt.close('all')
 
         # return the FWHM and the masked profile

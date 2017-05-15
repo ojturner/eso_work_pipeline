@@ -1,33 +1,8 @@
 
-Start time     : 2016-10-25T02:59:50
+Start time     : 2017-05-09T14:37:40
 Program name   : esorex
 Severity level : [ INFO  ] 
 
-02:59:50 [ INFO  ] : [tid=000] This is EsoRex, version 3.12.3
-02:59:50 [ INFO  ] : [tid=000] using the libraries: CPL = 7.0, CFITSIO = 3.36, WCSLIB = 4.24, FFTW (normal precision) = 3.3.4-sse2, FFTW (single precision) = 3.3.4-sse2, OPENMP = 201307
-02:59:50 [ INFO  ] : [tid=000] Invocation command line was: esorex --output-dir=/scratch2/oturner/disk2/turner/DATA/KLENS_C2/combined_h_telluric kmos_combine --name=CLASH0001152 --cmethod=ksigma --cpos_rej=3.0 --cneg_rej=3.0 --method=header --edge_nan=TRUE CLASH0001152_combine.sof
-02:59:50 [WARNING] : [tid=000] Unable to open directory 
-02:59:53 [ INFO  ] kmos_combine_shift: [tid=000] Calculating & applying shifts for 12 cubes:
-02:59:53 [ INFO  ] kmos_combine_shift: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T07:05:49.798_Corrected.fits, IFU 9] Shifts in x:   0.000 pix, in y:   0.000 pix
-02:59:53 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T07:16:34.364_Corrected.fits, IFU 9] Shifts in x:   0.000 pix, in y:  -2.000 pix
-02:59:53 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T07:38:05.140_Corrected.fits, IFU 9] Shifts in x:  -2.000 pix, in y:  -2.000 pix
-02:59:53 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T07:48:50.078_Corrected.fits, IFU 9] Shifts in x:  -2.000 pix, in y:   0.000 pix
-02:59:54 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T08:30:14.592_Corrected.fits, IFU 9] Shifts in x:   0.000 pix, in y:   0.000 pix
-02:59:54 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T08:40:58.376_Corrected.fits, IFU 9] Shifts in x:   0.000 pix, in y:  -2.000 pix
-02:59:54 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T09:02:00.325_Corrected.fits, IFU 9] Shifts in x:  -2.000 pix, in y:  -2.000 pix
-02:59:54 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/03-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-03T09:12:16.511_Corrected.fits, IFU 9] Shifts in x:  -2.000 pix, in y:   0.000 pix
-02:59:54 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/04-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-04T09:16:14.659_Corrected.fits, IFU 9] Shifts in x:   0.000 pix, in y:   0.000 pix
-02:59:54 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/04-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-04T09:24:23.232_Corrected.fits, IFU 9] Shifts in x:   0.000 pix, in y:  -2.000 pix
-02:59:54 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/04-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-04T09:40:42.129_Corrected.fits, IFU 9] Shifts in x:  -2.000 pix, in y:  -2.000 pix
-02:59:55 [ INFO  ] kmo_align_subpix: [tid=000] [/scratch2/oturner/disk2/turner/DATA/KLENS_C2/04-07-15_H-band/Science/SCI_RECONSTRUCTED_KMOS.2015-07-04T09:48:51.384_Corrected.fits, IFU 9] Shifts in x:  -2.000 pix, in y:   0.000 pix
-02:59:58 [ INFO  ] cpl_dfs_product_save: [tid=000] Writing FITS propertylist product(COMBINE_SCI_RECONSTRUCTED): COMBINE_SCI_RECONSTRUCTED_CLASH0001152.fits
-02:59:58 [ INFO  ] cpl_dfs_product_save: [tid=000] Writing FITS propertylist product(EXP_MASK_SCI_RECONSTRUCTED): EXP_MASK_SCI_RECONSTRUCTED_CLASH0001152.fits
-02:59:58 [ INFO  ] : [tid=000] Calculating product checksums
-02:59:58 [ INFO  ] : [tid=000] Created product /scratch2/oturner/disk2/turner/DATA/KLENS_C2/combined_h_telluric/COMBINE_SCI_RECONSTRUCTED_CLASH0001152.fits
-02:59:58 [ INFO  ] : [tid=000] Created product /scratch2/oturner/disk2/turner/DATA/KLENS_C2/combined_h_telluric/EXP_MASK_SCI_RECONSTRUCTED_CLASH0001152.fits
-02:59:58 [ INFO  ] : [tid=000] 2 products created
-02:59:58 [ INFO  ] : [tid=000] Recipe operation(s) took           8.69 seconds to complete.
-02:59:58 [ INFO  ] : [tid=000] Total size of 12 raw input frames  =   408.50 MB
-
-02:59:58 [ INFO  ] : [tid=000] => processing rate of    47.03 MB/sec 
-
+14:37:40 [ INFO  ] : [tid=000] This is EsoRex, version 3.12.3
+14:37:40 [ INFO  ] : [tid=000] using the libraries: CPL = 7.0, CFITSIO = 3.36, WCSLIB = 4.24, FFTW (normal precision) = 3.3.4-sse2, FFTW (single precision) = 3.3.4-sse2, OPENMP = 201307
+14:37:40 [ INFO  ] : [tid=000] Invocation command line was: esorex -h kmos_combine

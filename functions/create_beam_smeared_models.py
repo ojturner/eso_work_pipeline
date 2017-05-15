@@ -33,11 +33,11 @@ from astropy.convolution import convolve, convolve_fft, Gaussian2DKernel
 
 
 # add the class file to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import flatfield_cube as f_f
@@ -504,8 +504,8 @@ def multi_model_comparison(infile,
         plt.show()
         plt.close('all')
 
-infile='/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt'
-param_file='/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/grid_method_parameters_new.txt'
+infile='/disk2/turner/disk1/turner/DATA/goods_isolated_rotators_names.txt'
+param_file='/disk2/turner/disk1/turner/DATA/new_comb_calibrated/grid_method_parameters_new.txt'
 multi_model_comparison(infile=infile,
                        param_file=param_file,
                        seeing=0.5)

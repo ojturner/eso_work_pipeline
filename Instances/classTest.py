@@ -1,8 +1,8 @@
 import os
 import sys
 # add the class file to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/Class')
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/Class')
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 # import the relevant modules
 
@@ -24,63 +24,62 @@ from vel_field_class import vel_field
 
 # Create an instance of the class
 pipe_methods = pipelineOps()
-cube = cubeOps('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208.fits')
+cube = cubeOps('/disk2/turner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208.fits')
 wave_array = cube.wave_array
 
-#galaxy = galPhys('/scratch2/oturner/disk1/turner/DATA/Gals2/comb/Science/comp_spectrum.fits', 0)
+#galaxy = galPhys('/disk2/turner/disk1/turner/DATA/Gals2/comb/Science/comp_spectrum.fits', 0)
 #sky_cube = cubeOps(kskyCube)
 
 
 ##pipe_methods.computeOffsetSegments(objFile, skyFile, badPMap, lcalMap)
 ##The following are examples of using the functions within the class
 ##pipe_methods.computeOffsetTopFour('KMOS_SPEC_OBS258_0001_m_2_raw.fits', objFile)
-#k_names = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/K-band/Calibrations/corrected_object_names.txt'
-#h_names = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/Calibrations/corrected_object_names.txt'#
+#k_names = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/K-band/Calibrations/corrected_object_names.txt'
+#h_names = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/Calibrations/corrected_object_names.txt'#
 #
 
 ##Permanent Names
-#raw_14 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Names.txt'
-#names_14 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names.txt'
-#names_14_short = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names_short.txt'
-#names_14_shifted = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names_shifted.txt'#
+#raw_14 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Names.txt'
+#names_14 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names.txt'
+#names_14_short = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names_short.txt'
+#names_14_shifted = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names_shifted.txt'#
 
-#raw_15 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Names.txt'
-#names_15 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names.txt'
-#names_15_short = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names_short.txt'
-#names_15_shifted = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names_shifted.txt'#
+#raw_15 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Names.txt'
+#names_15 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names.txt'
+#names_15_short = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names_short.txt'
+#names_15_shifted = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names_shifted.txt'#
 #
 
-#noTel_names_15 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names_noTel.txt'
-#noTel_names_14 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names_noTel.txt'#
+#noTel_names_15 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/NGC55_15_Corrected_Names_noTel.txt'
+#noTel_names_14 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/NGC55_14_Corrected_Names_noTel.txt'#
 
 ##Changes depending on reduction process
-#frame_check_names = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/frameCheck/combNames.txt'
-#sci_names_14 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/S24-3-15/5sig_Science_Output'
-#sci_names_15 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/S24-3-15/5sig_Science_Output'
-#sci_names_14_noTel = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9_ws/sci_names_noTel.txt'
-#sci_names_14_noTel_1 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9/sci_names_noTel.txt'
-#sci_names_15_noTel = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_250-1500_15/Science_Output/sci_names_noTel.txt'#
+#frame_check_names = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/frameCheck/combNames.txt'
+#sci_names_14 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/S24-3-15/5sig_Science_Output'
+#sci_names_15 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/S24-3-15/5sig_Science_Output'
+#sci_names_14_noTel = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9_ws/sci_names_noTel.txt'
+#sci_names_14_noTel_1 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9/sci_names_noTel.txt'
+#sci_names_15_noTel = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_250-1500_15/Science_Output/sci_names_noTel.txt'#
 #
 
-#newFile2 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/KMOS_SPEC_OBS259_0014_Corrected_22_spline3_Shifted.fits'
-#newFile3 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/KMOS_SPEC_OBS258_0009_Corrected_Subtracted.fits'#
+#newFile2 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/15-09-2014/KMOS_SPEC_OBS259_0014_Corrected_22_spline3_Shifted.fits'
+#newFile3 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/KMOS_SPEC_OBS258_0009_Corrected_Subtracted.fits'#
 
 ##namesOfFile = np.genfromtxt(sci_names_14_noTel, dtype='str')
 ##namesOfFile_1 = np.genfromtxt(sci_names_14_noTel_1, dtype='str')#
 
-#objCube = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9/sci_combined_n55_19__skytweak.fits'
-#objSpec2 = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9/sci_combined_n55_19__skytweak_spectrum.fits'
-#objSpec = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/Science/Best_sci_combined_P108__skytweak_spectrum.fits'
-#skySpec = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/Science/cubesky_spectrum.fits'#
+#objCube = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9/sci_combined_n55_19__skytweak.fits'
+#objSpec2 = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9/sci_combined_n55_19__skytweak_spectrum.fits'
+#objSpec = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/Science/Best_sci_combined_P108__skytweak_spectrum.fits'
+#skySpec = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/Science/cubesky_spectrum.fits'#
 
-#hobjframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:05:24.218_Corrected_11_spline3_Shifted.fits'
-#hskyframe = '/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:03:33.904.fits'
+#hobjframe = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:05:24.218_Corrected_11_spline3_Shifted.fits'
+#hskyframe = '/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGCLEE/H-band/raw_frames/KMOS.2014-08-03T00:03:33.904.fits'
 
-combine_input = '/scratch2/oturner/disk2/turner/DATA/KLENS_C4/combined_h_telluric/all_nights.txt'
-sci_dir = '/scratch2/oturner/disk2/turner/DATA/KLENS_C4/combined_h_telluric/'
-#infile = '/scratch2/oturner/disk1/turner/DATA/all_names_new.txt'
-#combNames = '/scratch2/oturner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/Instances/gals_names.txt'
-#obj_names = '/scratch2/oturner/disk1/turner/DATA/NGC55/YJ/Calibrations/shifted_object_names.txt'
+
+#infile = '/disk2/turner/disk1/turner/DATA/all_names_new.txt'
+#combNames = '/disk2/turner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/Instances/gals_names.txt'
+#obj_names = '/disk2/turner/disk1/turner/DATA/NGC55/YJ/Calibrations/shifted_object_names.txt'
 
 #cal_dir = '/Volumes/SAMSUNG/uni_backup/turner/DATA/esther_tester/Calibrations'
 #gal_dir = '/Volumes/SAMSUNG/uni_backup/turner/DATA/SSA_HK_P2_comb_0.8_15/Science'
@@ -97,7 +96,7 @@ guess_params = [18.4515843627, 17.7671445415, 1.10786694516, 5.76470601635, 1.09
 guess_params_fixed = [1.04999129056,  5.80554889021,   0.106855839229,  65.2463520223]
 guess_params_fixed_inc_fixed = [3.82,  1.9, 46.0]
 
-v_field = vel_field('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_vel_field.fits',10.38  , 16.64)
+v_field = vel_field('/disk2/turner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_vel_field.fits',10.38  , 16.64)
 dim_x = v_field.xpix
 dim_y = v_field.ypix
 
@@ -117,7 +116,7 @@ sersic_field = psf.sersic_2d_astropy(dim_x=dim_y,
 #plt.close('all')
 
 # COMPUTE THE BEAM SMEAR #
-flux_field = fits.open('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_flux_field.fits')[0].data
+flux_field = fits.open('/disk2/turner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_flux_field.fits')[0].data
 for i in range(flux_field.shape[0]):
     for j in range(flux_field.shape[1]):
         if np.isnan(flux_field[i,j]):
@@ -173,33 +172,33 @@ for i in range(flux_field.shape[0]):
 
 # CHECK OUT THE AVERAGE SEEING
 
-#pipe_methods.av_seeing('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/all_nights.txt')
+#pipe_methods.av_seeing('/disk2/turner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/all_nights.txt')
 
 # APPLYING MODEL MCMC # 
 
-pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DATA/ssa_mergers_names.txt',
-                                              nwalkers=100,
-                                              nsteps=200,
-                                              burn_no=20,
-                                              r_aper=0.8,
-                                              d_aper=0.6,
-                                              seeing=0.6,
-                                              sersic_n=1.0,
-                                              sigma=50,
-                                              pix_scale=0.1,
-                                              psf_factor=4,
-                                              sersic_factor=50,
-                                              m_factor=4,
-                                              smear=True)
+#pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/disk2/turner/disk1/turner/PhD/PAPER_3_KDS_METALLICITIES/OBJECT_NAMES/k_band_names.txt',
+#                                              nwalkers=100,
+#                                              nsteps=200,
+#                                              burn_no=20,
+#                                              r_aper=0.8,
+#                                              d_aper=0.6,
+#                                              seeing=0.5,
+#                                              sersic_n=1.0,
+#                                              sigma=50,
+#                                              pix_scale=0.1,
+#                                              psf_factor=4,
+#                                              sersic_factor=50,
+#                                              m_factor=4,
+#                                              smear=True)
 
 # APPLYING VELOCITY FIELD COMPUTATION # 
 
-#pipe_methods.multi_vel_field_stott('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt',
+#pipe_methods.multi_vel_field_stott('/disk2/turner/disk1/turner/PhD/PAPER_3_KDS_METALLICITIES/OBJECT_NAMES/hk_band_names.txt',
 #                                   'oiii',
 #                                    3.0,
 #                                    g_c_min=0.5,
 #                                    g_c_max=1.5,
-#                                    seeing=0.6,
+#                                    seeing=0.5,
 #                                    pix_scale=0.1,
 #                                    psf_factor=1,
 #                                    intrin_sigma=50,
@@ -208,7 +207,7 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 
 # CREATING THE PLOT GRIDS # 
 
-#pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/scratch2/oturner/disk1/turner/DATA/ssa_isolated_rotator_names.txt',
+#pipe_methods.multi_make_all_plots_fixed_inc_fixed(infile='/disk2/turner/disk1/turner/DATA/ssa_isolated_rotator_names.txt',
 #                                                  r_aper=0.4,
 #                                                  d_aper=0.2,
 #                                                  seeing=0.60,
@@ -241,21 +240,23 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 
 # V OVER SIGMA # 
 
-#pipe_methods.v_over_sigma_distribution('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt', 0.8, 0.6, 'fixed_fixed', 'mean', seeing=0.5, pix_scale=0.1, smear=False)
+#pipe_methods.v_over_sigma_distribution('/disk2/turner/disk1/turner/DATA/all_names_new.txt', 0.8, 0.6, 'fixed_fixed', 'mean', seeing=0.5, pix_scale=0.1, smear=False)
 
-# VORONOI BINNING MAPS #
+# VORONOI BINNING MAPS #how to close xfce4-clipmanhow to close xfce4-clipmanhow to close xfce4-clipmanhow to close xfce4-clipman
 
 #pipe_methods.multi_apply_masked_voronoi(target_sn=1, out_dir=sci_dir, infile=infile, threshold=1, g_c_min = 0.5, g_c_max = 1.5, line='oiii', tol=50)
 
 # COMBINE BY NAME # 
 
-#pipe_methods.combine_by_name(sci_dir, combine_input, 0.25, 0.8, 10)
+combine_input = '/disk2/turner/disk2/turner/DATA/KDS/GOODS_P2/H/goods_p2_comb/all_nights.txt'
+sci_dir = '/disk2/turner/disk2/turner/DATA/KDS/GOODS_P2/H/goods_p2_comb/'
+pipe_methods.combine_by_name(sci_dir, combine_input, 0.2, 1.0, 0.075,star=True)
 
 #pipe_methods.combine_by_name(sci_dir, combine_input, 0.00001, 100, 5E-17, star=False)
 
 # PLOT PROPERTIES # 
 
-#pipe_methods.plot_properties('/scratch2/oturner/disk1/turner/DATA/v_over_sigma/master_goods_2.txt')
+#pipe_methods.plot_properties('/disk2/turner/disk1/turner/DATA/v_over_sigma/master_goods_2.txt')
 
 #data = v_field.compute_model_grid_fixed_inc_fixed(theta=guess_params_fixed_inc_fixed,
 #                                                  inc=1.1,
@@ -301,8 +302,8 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 #data[4,3] = 7
 #pipe_methods.blur_by_psf(data, 0.45, 0.1, psf_factor=1)
 #pipe_methods.psf_grid(30, 30, 15, 15, 0.7, 0.1)
-#pipe_methods.make_all_plots_no_image('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-md25.fits')
-#pipe_methods.make_all_plots('/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208.fits')
+#pipe_methods.make_all_plots_no_image('/disk2/turner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-md25.fits')
+#pipe_methods.make_all_plots('/disk2/turner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_b012141_012208.fits')
 #v_field.run_emcee_fixed(guess_params_fixed, 23.0536, 19.0002, 200, 1000, 100)
 
 #v_field.extract_in_apertures_fixed_inc_fixed(24.4515843627, 17.7671445415, 1.12, 0.8, 0.6)
@@ -326,19 +327,19 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 # pop2 = v_field.evolve(thing)
 # grade_2 = v_field.grade(pop2)
 # print grade_2
-#pipe_methods.compare_noise_methods('/scratch2/oturner/disk1/turner/DATA/all_names_new.txt', 'oiii', 3.0, g_c_min=0.5, g_c_max=1.5, method='mean',ntimes=1000)
+#pipe_methods.compare_noise_methods('/disk2/turner/disk1/turner/DATA/all_names_new.txt', 'oiii', 3.0, g_c_min=0.5, g_c_max=1.5, method='mean',ntimes=1000)
 #pipe_methods.perturb_value(0.2, [5, 6.5, 7])
 #pipe_methods.masked_voronoi_fitting(target_sn, out_dir, incube, centre_x, centre_y, mask_x_lower, mask_x_upper, mask_y_lower, mask_y_upper, redshift, threshold)
 #pipe_methods.masked_voronoi_fitting(4.0, sci_dir, obj_cube_gal, 10, 16, 8, 30, 7, 28, 3.47539936102, 5, tol=30, noise_method='mask')
 #pipe_methods.vel_field_mask_noise(incube, line, redshift, threshold, centre_x, centre_y, mask_x_low, mask_x_high, mask_y_low, mask_y_high)
 #pipe_methods.vel_field_stott_binning(obj_cube_gal, 'oiii', 3.3043123, 6.0, 10, 16, 5, 25, 10, 28, g_c_min=0.5, g_c_max=1.5, tol=30, method='mean', noise_method='mask', ntimes=1000)
 #pipe_methods.vel_field_sigma(obj_cube_gal, 'oiii', 3.28733447279, 6.0, 10, 16, 6, 25, 6, 29, tol=30, method='mean')
-#pipe_methods.stott_postage_stamps('/scratch2/oturner/disk1/turner/DATA/all_names.txt', 'oiii', 35)
+#pipe_methods.stott_postage_stamps('/disk2/turner/disk1/turner/DATA/all_names.txt', 'oiii', 35)
 #cube = cubeOps(obj_cube_gal)
 #cube.stott_velocity_field('oiii', 3.08705, 25, 19, 22, method='median')
-#pipe_methods.multi_apply_voronoi_binning('/scratch2/oturner/disk1/turner/DATA/all_names_calibrated.txt', 10.0)
-#pipe_methods.voronoi_binning_by_line('oiii', obj_cube_gal, 3.47328838, 2.0, '/scratch2/oturner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/voronoi')
-#pipe_methods.apply_voronoi_binning(vor_infile, '/scratch2/oturner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/voronoi', 1.5)
+#pipe_methods.multi_apply_voronoi_binning('/disk2/turner/disk1/turner/DATA/all_names_calibrated.txt', 10.0)
+#pipe_methods.voronoi_binning_by_line('oiii', obj_cube_gal, 3.47328838, 2.0, '/disk2/turner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/voronoi')
+#pipe_methods.apply_voronoi_binning(vor_infile, '/disk2/turner/disk1/turner/PhD/KMOS/Analysis_Pipeline/Python_code/voronoi', 1.5)
 #hb_flux, hb_vel, hb_sig = pipe_methods.vor_output_fitting(gal_dir, vor_output, obj_cube_gal, std_cube_gal, sky_cube_gal, 19, 20, 3.47328838, stack='median', line='hb')
 #oiii_flux, oiii_vel, oiii_sig = pipe_methods.vor_output_fitting(gal_dir, vor_output, obj_cube_gal, std_cube_gal, sky_cube_gal, 19, 20, 3.47328838, stack='median', line='oiii')
 #hb_met = pipe_methods.hb_metallicity(oiii_flux, hb_flux)
@@ -346,11 +347,11 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 #print np.nansum(oiii_flux[15:25, 10:20])
 #pipe_methods.telluric_correct('IZ', cal_dir)
 #field_instance.fit_kinematic_pa(plot=True, debug=False)
-#pipe_methods.multi_plot_all_maps('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_calibrated_1E16/all_names.txt', binning=False, xbin=1, ybin=1, interp='sum')
-#pipe_methods.multi_plot_OIII_vel_map('/scratch2/oturner/disk1/turner/DATA/uncalibrated_goods_p1_0.8_10_better/Science/goods_k_p1_spec_data.txt')
-#pipe_methods.multi_plot_OIII_vel_map('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/ssa22_p1_spec_data.txt')
-#pipe_methods.multi_plot_OIII_vel_map('/scratch2/oturner/disk1/turner/DATA/GOODS_K_P2_comb_0.8_10/Science/goods_k_p2_spec_data.txt')
-#pipe_methods.multi_plot_OIII_vel_map('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/ssa22_p2_spec_data.txt')
+#pipe_methods.multi_plot_all_maps('/disk2/turner/disk1/turner/DATA/SSA_HK_P2_comb_calibrated_1E16/all_names.txt', binning=False, xbin=1, ybin=1, interp='sum')
+#pipe_methods.multi_plot_OIII_vel_map('/disk2/turner/disk1/turner/DATA/uncalibrated_goods_p1_0.8_10_better/Science/goods_k_p1_spec_data.txt')
+#pipe_methods.multi_plot_OIII_vel_map('/disk2/turner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/ssa22_p1_spec_data.txt')
+#pipe_methods.multi_plot_OIII_vel_map('/disk2/turner/disk1/turner/DATA/GOODS_K_P2_comb_0.8_10/Science/goods_k_p2_spec_data.txt')
+#pipe_methods.multi_plot_OIII_vel_map('/disk2/turner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/ssa22_p2_spec_data.txt')
 # data = cube.spaxel_binning(cube.data, 2, 2)
 # print 'this is the original shape: (%s, %s)' % (cube.data.shape[1], cube.data.shape[2])
 # print 'this is the new shape: (%s, %s)' % (data.shape[1], data.shape[2])
@@ -366,15 +367,15 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 #                  interp='mean', 
 #                  savefig=True,
 #                  **oiii_values)
-#pipe_methods.multi_plot_K_image('/scratch2/oturner/disk1/turner/DATA/GOODS_K_P2_comb_0.8_10/Science/goods_k_p2_spec_data.txt')
-#pipe_methods.multi_plot_HK_image('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/ssa22_p2_spec_data.txt')
+#pipe_methods.multi_plot_K_image('/disk2/turner/disk1/turner/DATA/GOODS_K_P2_comb_0.8_10/Science/goods_k_p2_spec_data.txt')
+#pipe_methods.multi_plot_HK_image('/disk2/turner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/ssa22_p2_spec_data.txt')
 #pipe_methods.seeing_better_than(combine_input, 0.65)
 #pipe_methods.av_seeing(combine_input)
 #pipe_methods.singlePixelExtractMulti_OIII(sci_dir + '/sn.txt', sci_dir)
 #pipe_methods.singlePixelExtract_OIII5008(sci_dir, obj_cube_gal, 17, 17, 3.2943, 1)
 #pipe_methods.singlePixelExtract_OIII4960(sci_dir, obj_cube_gal, 23, 22, 3.08740, 1)
 #pipe_methods.singlePixelExtract_Hb(sci_dir, obj_cube_gal, 23, 22, 3.08740, 1)
-#pipe_methods.stackSpectra('/scratch2/oturner/disk1/turner/DATA/combined_spectra.txt', 0.00028076)
+#pipe_methods.stackSpectra('/disk2/turner/disk1/turner/DATA/combined_spectra.txt', 0.00028076)
 #pipe_methods.pSTNK(object_spectrum, 3.47465)
 #pipe_methods.maskExtraPixels(raw_file, badpixel_dark_new)
 #galaxy.printProps()
@@ -382,7 +383,7 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 #galaxy.fitHbandOIII()
 #pipe_methods.plotHandOII(1.666)
 #pipe_methods.galExtract(gal_dir, std_cube_gal, obj_cube_gal, sky_cube_gal, 9, 17, 1)
-#pipe_methods.multiGalExtract('/scratch2/oturner/disk1/turner/DATA/all_names.txt', 1)
+#pipe_methods.multiGalExtract('/disk2/turner/disk1/turner/DATA/all_names.txt', 1)
 #pipe_methods.frameCheck(sci_dir, obj_names, 'n55_19')
 #pipe_methods.compareSky(sci_dir, combNames)
 #new_Table = pipe_methods.reduce_list_seeing(combine_input, 0.5, 1.0)
@@ -391,14 +392,14 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 #print 'length name_Table is: %s'  % len(name_Table)
 #combine_Table = pipe_methods.reduce_list_sky(name_Table, 1.2)
 #print 'length combine_Table is: %s'  % len(combine_Table)
-#stuff, stuff1, stuff2 = pipe_methods.compareSky(sci_dir='/scratch2/oturner/disk1/turner/DATA/688/H/Science', combNames='co_names.txt')
+#stuff, stuff1, stuff2 = pipe_methods.compareSky(sci_dir='/disk2/turner/disk1/turner/DATA/688/H/Science', combNames='co_names.txt')
 
-#pipe_methods.saveSpec('/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/May_20th_tests/corr_with/sci_combined_s152__skytweak.fits')
+#pipe_methods.saveSpec('/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/May_20th_tests/corr_with/sci_combined_s152__skytweak.fits')
 #pipe_methods.plotSpecs(gal_dir, object_spectrum, sky_cube_gal, 1)
 
 #pipe_methods.multiExtractSpec(skyCube=hskyCube, frameNames=h_names)
 #Now try the subtraction method 
-#pipe_methods.subFrames('/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/KMOS_SPEC_OBS258_0009_Corrected_11_spline3_Shifted.fits', skyFile)
+#pipe_methods.subFrames('/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/NGC55/14-9-2014/KMOS_SPEC_OBS258_0009_Corrected_11_spline3_Shifted.fits', skyFile)
 #pipe_methods.subFrames('KMOS_SPEC_OBS258_0001_Corrected.fits', skyFile)
 #print 'all good'
 #print 'Hello'
@@ -509,7 +510,7 @@ pipe_methods.multi_apply_mcmc_fixed_inc_fixed('/scratch2/oturner/disk1/turner/DA
 #ax.set_xlabel('Detector ID')
 #ax.set_xticks((np.arange(min(xAxis), max(xAxis)+1, 1.0)))
 #ax.grid(b=True, which='both', linestyle='--')
-#fig.savefig('/scratch2/oturner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9_ws/median_comparison.png')
+#fig.savefig('/disk2/turner/disk1/turner/PhD/KMOS/KMOS_DATA/Pipeline_Execution/10-4-15_Pairs_14/all_but_9_ws/median_comparison.png')
 #plt.show()
 #plt.close('all')
 #print d.keys()

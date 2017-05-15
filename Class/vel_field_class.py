@@ -37,7 +37,7 @@ import emcee
 import corner
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import psf_blurring as psf
@@ -4055,7 +4055,7 @@ class vel_field(object):
 
         pa, rt, vasym = theta
 
-        if 0 < pa < 2 * np.pi and \
+        if 0.0 < pa < 2*np.pi  and \
            0.01 < rt < 2.0 and \
            0 < vasym < 250:
 

@@ -28,7 +28,7 @@ from photutils import CircularAperture
 from photutils import aperture_photometry
 
 # add the class file to the PYTHONPATH
-sys.path.append('/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
 # Need a function to do the extraction along the KA

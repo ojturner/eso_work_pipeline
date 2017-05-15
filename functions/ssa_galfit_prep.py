@@ -43,7 +43,7 @@ def extract_stamp(galaxy_name,
                   ra,
                   dec,
                   region_size,
-                  out_dir='/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN'):
+                  out_dir='/disk2/turner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN'):
     """
     Def:
     For a given galaxy, name must be specified, take the ra and dec
@@ -106,7 +106,7 @@ def extract_stamp(galaxy_name,
     wht_hdu.writeto(wht_name, clobber=True)
 
 def rotate_outputs(galaxy_name,
-                   search_dir='/scratch2/oturner/disk1/turner/DATA/GALFIT/SSA_F160W/'):
+                   search_dir='/disk2/turner/disk1/turner/DATA/GALFIT/SSA_F160W/'):
 
     """
     Def:
@@ -292,12 +292,12 @@ def save_to_directory(gal_name,
 
     galaxy_short = gal_name + '_output.fits'
 
-    galaxy = '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/galfit_output/' + gal_name + '_output.fits'
-    galaxy_rms = '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/rms_maps/'+ gal_name + '_rms.fits'
+    galaxy = '/disk2/turner/disk1/turner/DATA/Victoria_galfit/KMOS/images_stamps/' + gal_name + '_output.fits'
+    galaxy_rms = '/disk2/turner/disk1/turner/DATA/Victoria_galfit/KMOS/rms_maps/'+ '110812_sigmastamp.fits'
 
     # open up the first 
     table = fits.open(galaxy, mode='update')
-    divider = fits.open(galaxy_rms)[0].data
+    divider = fits.open(galaxy_rms)[0].data[35:-35,35:-35]
 
     #divider = divider[10:51, 10:51]
 
@@ -314,11 +314,11 @@ def save_to_directory(gal_name,
 
     if pointing == 1:
 
-        destination_dir = '/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/'
+        destination_dir = '/disk2/turner/disk2/turner/DATA/KDS/GOODS_P1/K/goods_p1_comb/'
 
     if pointing == 2:
 
-        destination_dir = '/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/'
+        destination_dir = '/disk2/turner/disk2/turner/DATA/KDS/GOODS_P2/K/goods_p1_comb'
 
     # copy to new directory 
     copy_name = destination_dir + galaxy_short
@@ -327,7 +327,7 @@ def save_to_directory(gal_name,
 
     # and change name to the actual galaxy name
 
-    replacement_name = destination_dir + 'combine_sci_reconstructed_' + actual_name + '_galfit.fits'
+    replacement_name = destination_dir + 'COMBINE_SCI_RECONSTRUCTED_' + actual_name + '_galfit.fits'
 
     os.system('mv %s %s' % (copy_name, replacement_name))
 
@@ -371,9 +371,9 @@ def resize_ssa_iband(stamp):
 
     table.close()                   
 
-#resize_ssa_iband('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-c20_galfit.fits')
-save_to_directory('d9', 2, 's_sa22b-d9')
-#extract_stamp('lab25', '/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_9_rotated.fits', 334.344179166 ,  0.264258333 , 3.0)
+#resize_ssa_iband('/disk2/turner/disk1/turner/DATA/SSA_HK_P2_comb_0.8_15/Science/combine_sci_reconstructed_s_sa22b-c20_galfit.fits')
+save_to_directory('lbg_121', 1, 'CDFS_LBG_121')
+#extract_stamp('lab25', '/disk2/turner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_9_rotated.fits', 334.344179166 ,  0.264258333 , 3.0)
 #rotate_outputs('nc47')
-#rotate_field('/scratch2/oturner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_3.fits', 1, 2)
+#rotate_field('/disk2/turner/disk1/turner/DATA/IMAGING/HST_SSA_F814W/CHAPMAN/pointing_3.fits', 1, 2)
 

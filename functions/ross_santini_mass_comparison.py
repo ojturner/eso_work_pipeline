@@ -58,7 +58,7 @@ def compare_mass(catalogue):
 
     # also want to read in the Holden values to plot
 
-    table_2 = ascii.read('/scratch2/oturner/disk1/turner/DATA/MASS_CATALOGS/KDS_GOODS_SAMPLE/ross_holden_mass_comparison.txt')
+    table_2 = ascii.read('/disk2/turner/disk1/turner/DATA/MASS_CATALOGS/KDS_GOODS_SAMPLE/ross_holden_mass_comparison.txt')
     ross_mass_2 = table_2['Ross_Mstar']
     ross_sfr = table_2['Ross_SFR']
     holden_mass = table_2['Holden_Mstar']
@@ -73,7 +73,7 @@ def compare_mass(catalogue):
 
     plt.show()
 
-    fig.savefig('/scratch2/oturner/disk1/turner/DATA/MASS_CATALOGS/ross_santini_mass_comparison.png')
+    fig.savefig('/disk2/turner/disk1/turner/DATA/MASS_CATALOGS/ross_santini_mass_comparison.png')
 
     plt.close('all')
 
@@ -115,10 +115,10 @@ def compare_mass(catalogue):
 
     plt.show()
 
-    fig.savefig('/scratch2/oturner/disk1/turner/DATA/MASS_CATALOGS/ross_holden_sfr_comparison_0.2z.png')
+    fig.savefig('/disk2/turner/disk1/turner/DATA/MASS_CATALOGS/ross_holden_sfr_comparison_0.2z.png')
 
     plt.close('all')
 
 
 
-compare_mass('/scratch2/oturner/disk1/turner/DATA/MASS_CATALOGS/KDS_GOODS_SAMPLE/kds_sample_ross_santini_matched.cat')
+compare_mass('/disk2/turner/disk1/turner/DATA/MASS_CATALOGS/KDS_GOODS_SAMPLE/kds_sample_ross_santini_matched.cat')

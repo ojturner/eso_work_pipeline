@@ -25,11 +25,11 @@ from photutils import EllipticalAperture
 from photutils import aperture_photometry
 
 # add the class file to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import flatfield_cube as f_f
@@ -60,7 +60,7 @@ param_names = ['Gal_name',
                'Rt',
                'Vmax']
 
-param_file = '/scratch2/oturner/disk1/turner/DATA/new_comb_calibrated/goods_grid_method_parameters_fixed.txt'
+param_file = '/disk2/turner/disk1/turner/DATA/new_comb_calibrated/goods_grid_method_parameters_fixed.txt'
 
 if os.path.isfile(param_file):
 
@@ -75,7 +75,7 @@ with open(param_file, 'w') as f:
         f.write('%s\t' % item)
 
     # read in the table of cube names
-    Table = ascii.read('/scratch2/oturner/disk1/turner/DATA/goods_isolated_rotators_names.txt')
+    Table = ascii.read('/disk2/turner/disk1/turner/DATA/goods_isolated_rotators_names.txt')
 
     # assign variables to the different items in the infile
     for entry in Table:

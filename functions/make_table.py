@@ -33,7 +33,7 @@ from photutils import aperture_photometry
 
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import flatfield_cube as f_f

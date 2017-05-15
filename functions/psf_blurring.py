@@ -34,7 +34,7 @@ from astropy.convolution import convolve, convolve_fft, Gaussian2DKernel
 
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import rotate_pa as rt_pa
@@ -263,7 +263,7 @@ def psf_grid(dim_x,
     
     n_hdu = fits.PrimaryHDU(g_mod_eval)
 
-    n_hdu.writeto('/scratch2/oturner/disk1/turner/DATA/Victoria_galfit/n_band_outputs_flatfield/psf_0.2.fits',
+    n_hdu.writeto('/disk2/turner/disk1/turner/DATA/Victoria_galfit/n_band_outputs_flatfield/psf_0.2.fits',
                   clobber=True)
 
     if float(psf_factor) != 1.0:
@@ -560,7 +560,7 @@ def cube_blur(vel_data,
 #    rc('font', weight='bold')
 #    rc('text', usetex=True)
 #    rc('axes', linewidth=2)
-#    vel_field_8543 = fits.open('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_vel_field.fits')[0].data
+#    vel_field_8543 = fits.open('/disk2/turner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_vel_field.fits')[0].data
 #    data_vels, data_x = rt_pa.extract(0.4, 0.6, pa, vel_field_8543, xcen, ycen, pix_scale)
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(vel_data,
@@ -573,7 +573,7 @@ def cube_blur(vel_data,
 #    # set the title
 #    ax.set_title('Model Velocities No smearing')
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/non_smeared_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/non_smeared_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
@@ -609,7 +609,7 @@ def cube_blur(vel_data,
 #    fig.tight_layout()
 #    ax.minorticks_on()
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/unsmeared_1d_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/unsmeared_1d_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
@@ -626,7 +626,7 @@ def cube_blur(vel_data,
 #    # set the title
 #    ax.set_title('Shifted Velocities')
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/smeared_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
@@ -662,7 +662,7 @@ def cube_blur(vel_data,
 #    fig.tight_layout()
 #    ax.minorticks_on()
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_1d_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/smeared_1d_velocity%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
@@ -680,7 +680,7 @@ def cube_blur(vel_data,
 #    # set the title
 #    ax.set_title('velocity residuals')
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/velocity_residuals%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/velocity_residuals%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
@@ -714,7 +714,7 @@ def cube_blur(vel_data,
 #    fig.tight_layout()
 #    ax.minorticks_on()
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/1d_smearing_comparison%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/1d_smearing_comparison%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
@@ -731,7 +731,7 @@ def cube_blur(vel_data,
 #    # set the title
 #    ax.set_title('Shifted Dispersions')
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_dispersions_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/smeared_dispersions_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
@@ -764,14 +764,14 @@ def cube_blur(vel_data,
 #    fig.tight_layout()
 #    ax.minorticks_on()
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/smeared_1d_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/smeared_1d_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,
 #                                                                                                             sersic_factor))
 #    plt.close('all')
 #    # Final comparison of the correction to the velocity dispersion
-#    sigma_data = fits.open('/scratch2/oturner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_sig_field.fits')[0].data
+#    sigma_data = fits.open('/disk2/turner/disk1/turner/DATA/SSA_HK_P1_comb_0.8_10/Science/combine_sci_reconstructed_n_c47_blob_sig_field.fits')[0].data
 #    sigma_intrinsic = sigma_data - shifted_sigma
 #    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 #    im = ax.imshow(sigma_intrinsic,
@@ -784,7 +784,7 @@ def cube_blur(vel_data,
 #    # set the title
 #    ax.set_title('intrinsic_sigma')
 #    plt.show()
-#    fig.savefig('/scratch2/oturner/disk1/turner/DATA/SMEARING_PLOTS/intrinsic_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
+#    fig.savefig('/disk2/turner/disk1/turner/DATA/SMEARING_PLOTS/intrinsic_sigma%s_sersic%s_seeing%s_psf%s_sersic%s.png' % (sigma,
 #                                                                                                             sersic_n,
 #                                                                                                             seeing,
 #                                                                                                             psf_factor,

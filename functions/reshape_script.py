@@ -24,11 +24,11 @@ from numpy import *
 def reshape_galfit(bulge,
                    disk):
 
-    cube_dir = '/disk1/turner/DATA/new_comb_calibrated/goods_p2_0.8_10_better/Science/'
+    cube_dir = '/disk2/turner/disk1/turner/DATA/new_comb_calibrated/goods_p2_0.8_10_better/Science/'
 
-    galfit_dir = '/disk1/turner/DATA/Victoria_remasked/'
+    galfit_dir = '/disk2/turner/disk1/turner/DATA/Victoria_remasked/'
 
-    sig_dir = '/disk1/turner/DATA/Victoria_remasked/rms_maps/'
+    sig_dir = '/disk2/turner/disk1/turner/DATA/Victoria_remasked/rms_maps/'
 
     cube_name = 'combine_sci_reconstructed_' + raw_input('Cube Name is: ') + '.fits'
 

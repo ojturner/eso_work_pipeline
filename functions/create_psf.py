@@ -30,11 +30,11 @@ from photutils import EllipticalAperture
 from photutils import aperture_photometry
 
 # add the class file to the PYTHONPATH
-sys.path.append('/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import cube_background_subtract as b_s
@@ -61,9 +61,9 @@ def psf_create(star_cube):
     noise_data = np.nanmedian(cube.Table[2].data[200:2000, :,:], axis=0)
 
     # save both to new fits files
-    star_name = '/disk1/turner/DATA/Victoria_galfit/star_image.fits'
+    star_name = '/disk2/turner/disk1/turner/DATA/Victoria_galfit/star_image.fits'
 
-    star_rms = '/disk1/turner/DATA/Victoria_galfit/star_image_rms.fits'
+    star_rms = '/disk2/turner/disk1/turner/DATA/Victoria_galfit/star_image_rms.fits'
 
     # write out to fits files
     o_hdu = fits.PrimaryHDU(star_data)
@@ -76,5 +76,5 @@ def psf_create(star_cube):
     n_hdu.writeto(star_rms,
                   clobber=True)
 
-star_cube = '/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_c_stars_7656.fits'
+star_cube = '/disk2/turner/disk1/turner/DATA/new_comb_calibrated/uncalibrated_goods_p1_0.8_10_better/Science/combine_sci_reconstructed_c_stars_7656.fits'
 psf_create(star_cube)

@@ -31,11 +31,11 @@ from photutils import EllipticalAperture
 from photutils import aperture_photometry
 
 # add the class file to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/Class')
 
 # add the functions folder to the PYTHONPATH
-sys.path.append('/scratch2/oturner/disk1/turner/PhD'
+sys.path.append('/disk2/turner/disk1/turner/PhD'
                 + '/KMOS/Analysis_Pipeline/Python_code/functions')
 
 import flatfield_cube as f_f
@@ -4688,7 +4688,8 @@ class pipelineOps(object):
                 os.system('esorex --output-dir=%s kmos_sci_red' % sci_dir
                           + '  --pix_scale=%s --oscan=FALSE --sky_tweak=TRUE' % pix_scale
                           + '  --b_samples=2048 --edge_nan=TRUE'
-                          + '  --discard_subband=TRUE --stretch=0 sci_reduc_temp.sof')
+                          + '  --discard_subband=FALSE --stretch=FALSE'
+                          + '  --stretch_degree=8 --stretch_resampling=spline sci_reduc_temp.sof')
 
                 # We have all the science products now
                 # execute the above method for each
@@ -8341,7 +8342,7 @@ class pipelineOps(object):
 
         f.tight_layout()
 
-        plt.savefig('/disk1/turner/DATA/Gals2/comb/'
+        plt.savefig('/disk2/turner/disk1/turner/DATA/Gals2/comb/'
                     + 'Science/OII_overplots/gals1_lbg105_OII.png')
         plt.show()
 
@@ -8501,7 +8502,7 @@ class pipelineOps(object):
         ax1.set_xlabel(r'Wavelength ($\mu m$)', fontsize=24)
         ax1.set_ylabel(r'Flux', fontsize=24)
         f.tight_layout()
-        plt.savefig('/disk1/turner/DATA/comp_spectrum.png')
+        plt.savefig('/disk2/turner/disk1/turner/DATA/comp_spectrum.png')
         plt.show()
 
         # Isolate the Hbeta and OIII lines and save to a new spectrum
@@ -8520,7 +8521,7 @@ class pipelineOps(object):
 
         thdulist = fits.HDUList([prihdu, tbhdu])
 
-        thdulist.writeto('/disk1/turner/DATA/comp_spectrum.fits', clobber=True)
+        thdulist.writeto('/disk2/turner/disk1/turner/DATA/comp_spectrum.fits', clobber=True)
 
     def av_seeing(self,
                   inFile):
@@ -11563,7 +11564,7 @@ class pipelineOps(object):
 
         treb_list = []
 
-        for g in range(xpixs - 11, xpixs - 6):
+        for g in range(xpixs - 12, xpixs - 7):
 
             for h in range(7, 12):
 
@@ -11592,9 +11593,9 @@ class pipelineOps(object):
 
         treb_list = []
 
-        for g in range(xpixs - 11, xpixs - 6):
+        for g in range(xpixs - 12, xpixs - 7):
 
-            for h in range(ypixs - 11, ypixs - 6):
+            for h in range(ypixs - 12, ypixs - 7):
 
                 treb_list.append(data[:, g, h])
 
@@ -11622,7 +11623,7 @@ class pipelineOps(object):
 
         for g in range(7, 12):
 
-            for h in range(ypixs - 11, ypixs - 6):
+            for h in range(ypixs - 12, ypixs - 7):
 
                 treb_list.append(data[:, g, h])
 
@@ -12101,7 +12102,7 @@ class pipelineOps(object):
                                 pix_scale,
                                 psf_factor,
                                 intrin_sigma=50,
-                                sersic_n=2.0,
+                                sersic_n=1.0,
                                 tol=30,
                                 method='median',
                                 noise_method='cube',
@@ -12165,13 +12166,21 @@ class pipelineOps(object):
                      [2.068,2.078],
                      [2.19,2.2])
 
-        else:
+        elif cube.filter == 'H':
 
             l_tup = ([1.521,1.527],
                      [1.600,1.607],
                      [1.687,1.693],
                      [1.698,1.704],
                      [1.710,1.716])
+
+        else:
+
+            l_tup = ([1.037,1.038],
+                     [1.097,1.098],
+                     [1.153,1.155],
+                     [1.228,1.2295],
+                     [1.301,1.303])
 
         res_array = []
 
@@ -12225,21 +12234,17 @@ class pipelineOps(object):
             range_upper = 10
 
         # find the polynomial to subtract from each spaxel (thermal noise)
-
-        poly_best = self.noise_from_mask_poly_subtract(cube.filter,
-                                                       data,
-                                                       mask_x_lower,
-                                                       mask_x_upper,
-                                                       mask_y_lower,
-                                                       mask_y_upper)
-
-        # update the data to have this thermal noise subtracted
-
-        for i in range(xpixs):
-
-            for j in range(ypixs):
-
-                data[:, i, j] = data[:, i, j] - poly_best
+        if cube.filter == 'K' or cube.filter == 'HK':
+            poly_best = self.noise_from_mask_poly_subtract(cube.filter,
+                                                           data,
+                                                           mask_x_lower,
+                                                           mask_x_upper,
+                                                           mask_y_lower,
+                                                           mask_y_upper)
+            # update the data to have this thermal noise subtracted
+            for i in range(xpixs):
+                for j in range(ypixs):
+                    data[:, i, j] = data[:, i, j] - poly_best
 
         # now thermal noise subtracted and everything can proceed
         # as before - or alternatively can get rid of this step again
@@ -12408,6 +12413,8 @@ class pipelineOps(object):
 
                     raise ValueError('Please provide valid noise method')
 
+                #print 'NOISE VALUE %s' % line_noise
+
                 # find the noise reduction factors of the binning methods
                 # these feed into the binning_three and binning_five
                 # methods to figure out what the new noise should be
@@ -12424,13 +12431,15 @@ class pipelineOps(object):
                                                                  lower_limit,
                                                                  upper_limit)
 
+                #print 'REDUCTION FACTORS %s %s' % (t_red,f_red)
+
                 # this must also be multiplied by the spectral resolution
                 # print 'This is the original line noise: %s' % line_p_noise
 
                 line_noise = line_noise * cube.dL
 
-                # print 'THIS IS THE SIGNAL %s' % line_counts
-                # print 'THIS IS THE NOISE %s' % line_noise
+#                print 'THIS IS THE SIGNAL %s' % line_counts
+#                print 'THIS IS THE NOISE %s' % line_noise
 
                 # be careful with how the signal array is populated
 
@@ -12451,7 +12460,7 @@ class pipelineOps(object):
 
                 line_sn = line_counts / line_noise
 
-                # print 'THIS IS THE SIGNAL TO NOISE %s' % line_sn
+#                print 'THIS IS THE SIGNAL TO NOISE %s' % line_sn
 
                 # searching the computed signal to noise in this section
 
@@ -13152,9 +13161,9 @@ class pipelineOps(object):
         # the velocity field and a parameters list and use these to compute
         # the model field - if they don't exist.
 
-        vel_field_name = incube[:-5] + '_vel_field.fits'
+        vel_field_name = incube[:-5] + line + '_vel_field.fits'
 
-        params_name = incube[:-5] + '_vel_field_params_fixed.txt'
+        params_name = incube[:-5] + line + '_vel_field_params_fixed.txt'
 
         # want to save the observed sigma, the resolution sigma,
         # the beam smeared sigma and the corrected intrinsic sigma
@@ -13367,11 +13376,12 @@ class pipelineOps(object):
 
         # plt.show()
 
-        fig.savefig('%s_stamps_gauss%s_t%s_%s_%s.pdf' % (incube[:-5],
-                                                         str(tol),
-                                                         str(threshold),
-                                                         method,
-                                                         noise_method))
+        fig.savefig('%s_%s_stamps_gauss%s_t%s_%s_%s.pdf' % (incube[:-5],
+                                                            line,
+                                                            str(tol),
+                                                            str(threshold),
+                                                            method,
+                                                            noise_method))
 
         plt.close('all')
 
@@ -13379,31 +13389,45 @@ class pipelineOps(object):
         # array as fits files so they can be loaded into disk
         flux_hdu = fits.PrimaryHDU(masked_flux_array)
 
-        flux_hdu.writeto('%s_flux_field.fits' % incube[:-5], clobber=True)
+        flux_hdu.writeto('%s_%s_flux_field.fits' % (incube[:-5],
+                                                    line),
+                         clobber=True)
 
         vel_hdu = fits.PrimaryHDU(masked_vel_array)
 
-        vel_hdu.writeto('%s_vel_field.fits' % incube[:-5], clobber=True)
+        vel_hdu.writeto('%s_%s_vel_field.fits' % (incube[:-5],
+                                                  line),
+                         clobber=True)
 
         vel_err_hdu = fits.PrimaryHDU(vel_error_array)
 
-        vel_err_hdu.writeto('%s_error_field.fits' % incube[:-5], clobber=True)
+        vel_err_hdu.writeto('%s_%s_error_field.fits'  % (incube[:-5],
+                                                         line),
+                            clobber=True)
 
         sig_hdu = fits.PrimaryHDU(masked_disp_array)
 
-        sig_hdu.writeto('%s_sig_field.fits' % incube[:-5], clobber=True)
+        sig_hdu.writeto('%s_%s_sig_field.fits' %   (incube[:-5],
+                                                     line),
+                         clobber=True)
 
         sig_int_hdu = fits.PrimaryHDU(masked_int_sig_array)
 
-        sig_int_hdu.writeto('%s_int_sig_field.fits' % incube[:-5], clobber=True)
+        sig_int_hdu.writeto('%s_%s_int_sig_field.fits'  % (incube[:-5],
+                                                           line),
+                            clobber=True)
 
         sig_sky_hdu = fits.PrimaryHDU(masked_sky_res_array)
 
-        sig_sky_hdu.writeto('%s_sig_sky_field.fits' % incube[:-5], clobber=True)
+        sig_sky_hdu.writeto('%s_%s_sig_sky_field.fits'  % (incube[:-5],
+                                                           line),
+                            clobber=True)
 
         sig_error_hdu = fits.PrimaryHDU(masked_tot_sig_error_array)
 
-        sig_error_hdu.writeto('%s_sig_error_field.fits' % incube[:-5], clobber=True)
+        sig_error_hdu.writeto('%s_%s_sig_error_field.fits'  % (incube[:-5],
+                                                            line),
+                              clobber=True)
 
         # return the noise, signal and flux arrays for potential
         # voronoi binning
@@ -13451,32 +13475,39 @@ class pipelineOps(object):
         noise_list = []
         noise_values = []
 
+        print 'printing mask values'
+        print mask_x_lower, mask_x_upper, mask_y_lower, mask_y_upper
+        print data.shape[2]
+
         # loop round and append to this list
         # four different mask segments to append
 
-        for i in range(5, mask_x_lower + 1):
+        for i in range(4, mask_x_lower + 1):
 
-            for j in range(5, data.shape[2] - 5):
-
-                noise_list.append(data[:, i, j])
-
-        for i in range(mask_x_upper, data.shape[1] - 5):
-
-            for j in range(5, data.shape[2] - 5):
+            for j in range(4, data.shape[2] - 4):
 
                 noise_list.append(data[:, i, j])
 
-        for i in range(mask_x_lower, mask_x_upper + 1):
+        for i in range(mask_x_upper, data.shape[1] - 4):
 
-            for j in range(5, mask_y_lower + 1):
+            for j in range(4, data.shape[2] - 4):
 
                 noise_list.append(data[:, i, j])
 
         for i in range(mask_x_lower, mask_x_upper + 1):
 
-            for j in range(mask_y_upper, data.shape[2] - 5):
+            for j in range(4, mask_y_lower + 1):
 
                 noise_list.append(data[:, i, j])
+
+        for i in range(mask_x_lower, mask_x_upper + 1):
+
+            for j in range(mask_y_upper, data.shape[2] - 4):
+
+                noise_list.append(data[:, i, j])
+
+        print 'noise list'
+        print data.shape
 
         # polynomial fit to the noise spectrum (for continuum subtraction)
 
@@ -13497,17 +13528,24 @@ class pipelineOps(object):
             out = poly_mod.fit(poly_noise[100:1900], pars, x=x[100:1900])
             poly_best = out.eval(x=x)
 
-        else:
+        elif cube_filter == 'H':
 
             poly_mod = PolynomialModel(5)
             pars = poly_mod.guess(poly_noise[100:1900], x=x[100:1900])
             out = poly_mod.fit(poly_noise[100:1900], pars, x=x[100:1900])
             poly_best = out.eval(x=x)
 
+        else:
 
-#        fig, ax = plt.subplots(1, 1, figsize=(18, 10))
-#        ax.plot(x[100:1900], poly_noise[100:1900])
-#        ax.plot(x[100:1900], poly_best[100:1900])
+            poly_mod = PolynomialModel(5)
+            pars = poly_mod.guess(poly_noise[100:1800], x=x[100:1800])
+            out = poly_mod.fit(poly_noise[100:1800], pars, x=x[100:1800])
+            poly_best = out.eval(x=x)
+
+
+        fig, ax = plt.subplots(1, 1, figsize=(18, 10))
+        ax.plot(x[100:1800], poly_noise[100:1800])
+        ax.plot(x[100:1800], poly_best[100:1800])
         # plt.show()
         plt.close('all')
 
@@ -13556,27 +13594,27 @@ class pipelineOps(object):
         # loop round and append to this list
         # four different mask segments to append
 
-        for i in range(5, mask_x_lower + 1):
+        for i in range(7, mask_x_lower + 1):
 
-            for j in range(5, data.shape[2] - 5):
-
-                noise_list.append(data[:, i, j])
-
-        for i in range(mask_x_upper, data.shape[1] - 5):
-
-            for j in range(5, data.shape[2] - 5):
+            for j in range(7, data.shape[2] - 7):
 
                 noise_list.append(data[:, i, j])
 
-        for i in range(mask_x_lower, mask_x_upper + 1):
+        for i in range(mask_x_upper, data.shape[1] - 7):
 
-            for j in range(5, mask_y_lower + 1):
+            for j in range(7, data.shape[2] - 7):
 
                 noise_list.append(data[:, i, j])
 
         for i in range(mask_x_lower, mask_x_upper + 1):
 
-            for j in range(mask_y_upper, data.shape[2] - 5):
+            for j in range(7, mask_y_lower + 1):
+
+                noise_list.append(data[:, i, j])
+
+        for i in range(mask_x_lower, mask_x_upper + 1):
+
+            for j in range(mask_y_upper, data.shape[2] - 7):
 
                 noise_list.append(data[:, i, j])
 
@@ -19244,7 +19282,7 @@ class pipelineOps(object):
                         'WEIGHTED_sigma']
 
 
-        save_dir = '/disk1/turner/DATA/v_over_sigma/since_durham/'
+        save_dir = '/disk2/turner/disk1/turner/DATA/v_over_sigma/since_durham/'
 
         big_list = []
 
@@ -20171,14 +20209,14 @@ class pipelineOps(object):
         ax.set_ylim([0, 170])
         plt.show()
 
-        scatter_name = '/disk1/turner/DATA/v_over_sigma/' + 'scatter' + \
+        scatter_name = '/disk2/turner/disk1/turner/DATA/v_over_sigma/' + 'scatter' + \
             i_option + '_' + sig_option + '.png'
 
         fig.savefig(scatter_name)
 
         plt.close('all')
 
-        hist_name = '/disk1/turner/DATA/v_over_sigma/' + 'hist' + \
+        hist_name = '/disk2/turner/disk1/turner/DATA/v_over_sigma/' + 'hist' + \
             i_option + '_' + sig_option + '.png'
 
         fig, ax = plt.subplots(1, 1, figsize=(14, 14))
@@ -20250,7 +20288,7 @@ class pipelineOps(object):
 
 
         # also want to print out the results to file
-        res_file = '/disk1/turner/DATA/v_over_sigma/' + 'v_ratio_' + \
+        res_file = '/disk2/turner/disk1/turner/DATA/v_over_sigma/' + 'v_ratio_' + \
             i_option + '_' + sig_option + '.txt'
 
         if os.path.isfile(res_file):
@@ -20477,5 +20515,5 @@ class pipelineOps(object):
         ax[1].minorticks_on()
         ax[2].minorticks_on()
         plt.show()
-        fig.savefig('/disk1/turner/DATA/paper_plots/paper_distributions.png')
+        fig.savefig('/disk2/turner/disk1/turner/DATA/paper_plots/paper_distributions.png')
 

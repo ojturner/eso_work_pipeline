@@ -117,12 +117,12 @@ def make_image(r,
 
 
 
-b = '/scratch2/oturner/disk1/turner/DATA/IMAGING/CANDELS_GOODSS_ACS/CANDELS_850/gs_acs_old_f850l_060mas_v2_drz.fits'
-g = '/scratch2/oturner/disk1/turner/DATA/IMAGING/CANDELS_GOODSS_WFCAM3/CANDELS_125/gs_all_candels_ers_udf_f125w_060mas_v0.5_drz.fits'
-r = '/scratch2/oturner/disk1/turner/DATA/IMAGING/CANDELS_GOODSS_WFCAM3/CANDELS_160/gs_all_candels_ers_udf_f160w_060mas_v0.5_drz.fits'
-sv = '/scratch2/oturner/disk1/turner/DATA/IMAGING/GOODS_COLOUR_160/'
+b = '/disk2/turner/disk1/turner/DATA/IMAGING/CANDELS_GOODSS_ACS/CANDELS_850/gs_acs_old_f850l_060mas_v2_drz.fits'
+g = '/disk2/turner/disk1/turner/DATA/IMAGING/CANDELS_GOODSS_WFCAM3/CANDELS_125/gs_all_candels_ers_udf_f125w_060mas_v0.5_drz.fits'
+r = '/disk2/turner/disk1/turner/DATA/IMAGING/CANDELS_GOODSS_WFCAM3/CANDELS_160/gs_all_candels_ers_udf_f160w_060mas_v0.5_drz.fits'
+sv = '/disk2/turner/disk1/turner/DATA/IMAGING/GOODS_COLOUR_160/'
 
-table = ascii.read('/scratch2/oturner/disk1/turner/Catalogues/goods_s/goods_p2.txt')
+table = ascii.read('/disk2/turner/disk1/turner/Catalogues/goods_s/goods_p2.txt')
 
 for entry in table:
 
